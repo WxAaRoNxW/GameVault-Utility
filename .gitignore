@@ -174,3 +174,8 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
+
+_crack files/
+_original files/
+Engine/
+gv_*
