@@ -5,19 +5,21 @@ from configobj import ConfigObj
 from util import get_exe_path, pause
 from logger import console
 
-custom_script_name = "GV"
-custom_script_filename = "gv_config"
+gv_name = "GameVault"
+gvu_config_dir = "_GVU/GVU config"
+custom_script_name = "GVU"
+custom_script_filename = "gvu_config"
 custom_script_copy_append = "_copy_DO_NOT_DELETE"
 
 # ----------------------------
 # Paths
 # ----------------------------
 BASE_PATH               = get_exe_path().parent
-CONFIG_PATH             = BASE_PATH / f"{custom_script_filename}.ini"                    # external config
-CONFIG_COPY_PATH        = BASE_PATH / f"{custom_script_filename}{custom_script_copy_append}.ini" # external config copy
+CONFIG_PATH             = BASE_PATH / gvu_config_dir / f"{custom_script_filename}.ini"                    # external config
+CONFIG_COPY_PATH        = BASE_PATH / gvu_config_dir / f"{custom_script_filename}{custom_script_copy_append}.ini" # external config copy
 GAMEVAULT_EXEC_CONFIG   = BASE_PATH.parent / "gamevault-exec"               # parent path's config file
-ORIGINAL_FILES_PATH     = BASE_PATH / "_original files"
-CRACK_FILES_PATH        = BASE_PATH / "_crack files"
+ORIGINAL_FILES_PATH     = BASE_PATH / gvu_config_dir / "_original files"
+CRACK_FILES_PATH        = BASE_PATH / gvu_config_dir / "_crack files"
 GLOBAL_CONFIG           = BASE_PATH.parent.parent / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
 
 def validate_paths():

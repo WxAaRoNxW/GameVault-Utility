@@ -2,7 +2,7 @@ from enum import Enum
 import os
 from pathlib import Path
 import webbrowser
-from config_loader import Config, get_config_value, set_config_values
+from config_loader import Config, get_config_value, set_config_values, gv_name
 from global_config import GlobalConfig, get_global_config_value, set_global_config_value
 from util import clear_screen, clear_input_buffer, pause, prompt_yes_no, sleep, validate_steam_id
 from logger import console
@@ -100,7 +100,7 @@ def goldberg_setup():
     settings_folder.mkdir(parents=True, exist_ok=True)
     settings_name_path = settings_folder / name_file
     settings_id_path = settings_folder / steam_id_file
-    account_name: str = "GY"
+    account_name: str = gv_name
     id_content: str = "76561197960265728"
     exists = False
     # Check if files exists and Show existing data

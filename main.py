@@ -27,9 +27,9 @@ def start_game():
     exe_path = Path(exe_path)
 
     if exe_path.exists() and exe_path.is_file():
-        console.print(f"Starting game: {exe_path}")
-        subprocess.run(exe_path)
-        sys.exit("Exiting...")
+        console.print(f"Starting game...")
+        subprocess.Popen(exe_path)
+        sys.exit(0)
     else:
         console.print("[red]Executable path not found in external config.")
         sleep(2)
@@ -101,6 +101,7 @@ def get_change_version_choice_str():
 def main():
     choice: MenuChoices | None = inquirer.select(
         message="Select an option:",
+        instruction="Use Arrow Keys",
         choices=[
             Choice(value=MenuChoices.Start,         name="Start game"),
             Choice(value=MenuChoices.StartAlways,   name="Start game and don't ask again"),
@@ -121,7 +122,7 @@ def main():
         case MenuChoices.ChangeVersion:
             prompt_change_version()
         case _:
-            sys.exit("Exiting...")
+            sys.exit(0)
 
 # ----------------------------
 # Entry point
