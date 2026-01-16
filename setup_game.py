@@ -1,12 +1,12 @@
 from enum import Enum
 import os
 from pathlib import Path
-import time
 import webbrowser
 from config_loader import Config, get_config_value, set_config_values
 from global_config import GlobalConfig, get_global_config_value, set_global_config_value
-from util import clear_screen, clear_stdin, pause, prompt_yes_no, validate_steam_id
+from util import clear_screen, clear_input_buffer, pause, prompt_yes_no, sleep, validate_steam_id
 from logger import console
+from InquirerPy import inquirer
 
 class CRACK_TYPES(Enum):
     OnlineFix = 0
@@ -43,21 +43,19 @@ def one_time_setup():
             pause(clear=True)
 
 def onlinefix_setup():
-    if prompt_yes_no("Have you ever added Spacewar to your steam library in the past by installing and removing it?", False):
-        clear_screen()
+    proceed = inquirer.confirm(message="Have you ever added Spacewar to your steam library in the past by installing and removing it?", 
+                               default=False).execute()
+    if proceed:
         console.print("Nothing to do")
-        clear_screen()
         return
     
-    clear_screen()
     console.print("Steam will pop-up to ask you to install Spacewar (to add to your library)")
     console.print("You can immediately cancel/remove as soon as you PRESS INSTALL")
-    time.sleep(5)
-    clear_stdin()
+    sleep(5)
     webbrowser.open("steam://install/480")
     console.print("If the install menu doesn't show up, make sure you've logged-in or selected an account you'll use on steam.")
     console.print("Once done, setup is complete for EVERY OnlineFix games for THIS Steam account")
-    pause(clear=True)
+    pause()
     mark_done(CRACK_TYPES.OnlineFix)
 
 # Goldberg setup
@@ -66,22 +64,22 @@ def goldberg_setup():
     steam_id_file = "user_steam_id.txt"
     def modify_data(current_name, current_id):
         # Prompt user
-        name_input = input(f"Enter your name to show in game (blank for default: {current_name}): ").strip()
-        if not name_input: name_input = current_name
-        clear_screen()
+        name_input = inquirer.text(message="Enter your name:", 
+                      default=current_name,
+                      instruction="This is what you'll be seen as in-game",
+                      validate= lambda result: len(result) > 0
+                      ).execute()
 
+        console.print("A web page will open for you to find your Steam ID")
+        sleep(2)
         webbrowser.open("https://steamid.xyz/")
-        while True:
-            console.print("Some games' save file are located in this Steam ID.")
-            console.print("Best to stick to one Steam ID or else you'll have to manually migrate your save files when you change midway.")
-            console.print("You can choose a fake or your own, doesn't matter.")
-            console.print()
-            console.print("A WEB PAGE OPENED for you to find your Steam ID")
-            user_id_input = input(f"Enter your Steam64 ID (blank for default: {current_id}): ").strip()
-            if not user_id_input: user_id_input = current_id
-
-            clear_screen()
-            if validate_steam_id(user_id_input): break
+        #while True:
+        user_id_input = inquirer.number(message="Enter your Steam64 ID:", 
+                                        default=76561202255233023,
+                                        replace_mode=True,
+                                        long_instruction="Some games' save file are located in this Steam ID.\nBest to stick to one Steam ID or else you'll have to manually migrate your save files when you change midway.\nYou can choose a fake or your own, doesn't matter.",
+                                        validate=validate_steam_id
+                                        ).execute()
             
         # Write name.txt and id.txt
         (settings_folder / "account_name.txt").write_text(name_input, encoding="utf-8")
@@ -118,7 +116,8 @@ def goldberg_setup():
 
     # Prompt setup to modify if exists
     if exists:
-        proceed = prompt_yes_no("Proceed?...", True)
+        proceed = inquirer.confirm(message="Proceed?...", 
+                               default=True).execute()
         if not proceed: return
         modify_data(account_name, id_content)
     # Else prompt setup

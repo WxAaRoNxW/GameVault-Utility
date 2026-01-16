@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import sys
+import time
 from logger import console
 
 def get_exe_path() -> Path:
@@ -53,9 +54,6 @@ def validate_steam_id(id: str):
         id = 0
     if id <= 76561202255233023 and id >= 76561197960265728:
         return True
-    console.print()
-    console.print("Invalid Steam64 ID")
-    pause()
     return False
 
 def pause(clear: bool = False):
@@ -65,7 +63,7 @@ def pause(clear: bool = False):
         clear_screen()
     else:
         console.print()
-    clear_stdin()
+    clear_input_buffer()
 
 def clear_screen():
     """
@@ -81,7 +79,7 @@ def clear_screen():
     except Exception as e:
         console.print(f"Error clearing screen: {e}")
 
-def clear_stdin():
+def clear_input_buffer():
     try:
         # Windows
         import msvcrt
@@ -92,3 +90,7 @@ def clear_stdin():
         import sys
         import termios
         termios.tcflush(sys.stdin, termios.TCIFLUSH)
+    
+def sleep(seconds: float):
+    time.sleep(seconds)
+    clear_input_buffer()

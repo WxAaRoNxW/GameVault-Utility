@@ -1,13 +1,15 @@
+from enum import Enum
 from pathlib import Path
 import sys
 import subprocess
-import time
 from setup_game import CRACK_TYPES, is_complete, one_time_setup
 from config_loader import BASE_PATH, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values
-from util import clear_screen, get_exe_path
+from util import clear_screen, get_exe_path, sleep
 from version_changer import change_version
 from gamevault_exec_handler import set_executable
 from logger import console
+from InquirerPy import inquirer
+from InquirerPy.base.control import Choice
 
 # ----------------------------
 # Functions
@@ -30,7 +32,7 @@ def start_game():
         sys.exit("Exiting...")
     else:
         console.print("[red]Executable path not found in external config.")
-        time.sleep(2)
+        sleep(2)
 
 # 2. Start game and don't ask again
 def start_game_no_prompt():
@@ -38,95 +40,98 @@ def start_game_no_prompt():
     set_executable(str(BASE_PATH / get_config_value(Config.Default.str(), Config.Default.Executable)))
     
     console.print(f"Updated gamevault-exec file to skip prompt next time.")
-    time.sleep(2)
+    sleep(2)
     start_game()
 
 # 4. Change version (delete files in __folder1, merge __folder2 into base)
 def prompt_change_version():
-    while True:
+    choice = inquirer.select(
+        message=get_change_version_choice_str()+":",
+        choices=[
+            "Original",
+            "Pirated",
+            Choice(value=None, name="Back")
+        ],
+        default="Original",
 
-        console.print("Choose version:")
-        console.print("1. Original")
-        console.print("2. Pirated")
-        console.print("3. Back")
-        choice = input("Enter choice (1 or 2): ").strip()
-        match choice:
-            case "1":
-                choice = "Original"
-                break
-            case "2":
-                choice = "Pirated"
-                break
-            case "3":
-                clear_screen()
-                return
-            case _:
-                console.print("Invalid choice.")
+    ).execute()
+
+    if choice is None:
         clear_screen()
-
-    clear_screen()
+        return
+    #clear_screen()
     change_version(version=choice)
+
+class MenuChoices(Enum):
+    Start = 0,
+    StartAlways = 1,
+    Setup = 2,
+    ChangeVersion = 3
+
+def get_setup_choice_str():
+    # Load suffix info from external config
+    setup_type = get_config_value(Config.Crack.str(), Config.Crack.Type, "CONTACT GAMEVAULT ADMIN")
+    setup_done = is_complete()
+    # Build option 3 string
+    match CRACK_TYPES[setup_type]:
+        case CRACK_TYPES.OnlineFix:
+            choice_string = f"One-time global setup for '{setup_type}'"
+        case CRACK_TYPES.Goldberg:
+            choice_string = f"One-time global setup for '{setup_type}'"
+        case CRACK_TYPES.RUNE:
+            choice_string = f"Per-Game Setup for '{setup_type}'"
+        case _:
+            choice_string = "Option error, Contact GameVault Admin!"
+    if setup_done:
+        choice_string += " (complete)"
+    else:
+        choice_string += " (DO THIS FIRST)"
+    
+    return choice_string
+def get_change_version_choice_str():
+    choice_string = "Change version"
+    current_version = get_config_value(Config.Default.str(), Config.Default.GameVersion, "")
+    if current_version:
+        choice_string += f". Current: {current_version}"
+    return choice_string
 
 # ----------------------------
 # Main prompt loop
 # ----------------------------
 def main():
-    while True:
-        # Load suffix info from external config
-        setup_type = get_config_value(Config.Crack.str(), Config.Crack.Type, "CONTACT GAMEVAULT ADMIN")
-        setup_done = is_complete()
-
-        # Build option 3 string
-        match CRACK_TYPES[setup_type]:
-            case CRACK_TYPES.OnlineFix:
-                option3_str = f"3. One-time global setup for '{setup_type}'"
-            case CRACK_TYPES.Goldberg:
-                option3_str = f"3. One-time global setup for '{setup_type}'"
-            case CRACK_TYPES.RUNE:
-                option3_str = f"3. Per-Game Setup for '{setup_type}'"
-            case _:
-                option3_str = "3. Option error, Contact GameVault Admin!"
-        if setup_done:
-            option3_str += " (complete)"
-        else:
-            option3_str += " (DO THIS FIRST)"
-            
-
-        option4_str = "4. Change version"
-        current_version = get_config_value(Config.Default.str(), Config.Default.GameVersion, "")
-        if current_version:
-            option4_str += f". Current: {current_version}"
-
-        console.print("\nSelect an option:")
-        console.print("1. Start game")
-        console.print("2. Start game and don't ask again")
-        console.print(option3_str)
-        console.print(option4_str)
-        console.print("5. Exit")
-        
-        choice = input("Enter choice (1-5): ").strip()
-        clear_screen()
-        if choice == "1":
+    choice: MenuChoices | None = inquirer.select(
+        message="Select an option:",
+        choices=[
+            Choice(value=MenuChoices.Start,         name="Start game"),
+            Choice(value=MenuChoices.StartAlways,   name="Start game and don't ask again"),
+            Choice(value=MenuChoices.Setup,         name=get_setup_choice_str()),
+            Choice(value=MenuChoices.ChangeVersion, name=get_change_version_choice_str()),
+            Choice(value=None, name="Exit")
+        ],
+        default="Original",
+    ).execute()
+    
+    match choice:
+        case MenuChoices.Start:
             start_game()
-        elif choice == "2":
+        case MenuChoices.StartAlways:
             start_game_no_prompt()
-        elif choice == "3":
+        case MenuChoices.Setup:
             one_time_setup()
-        elif choice == "4":
+        case MenuChoices.ChangeVersion:
             prompt_change_version()
-        elif choice == "5":
+        case _:
             sys.exit("Exiting...")
-        else:
-            console.print("Invalid choice, try again.")
-            clear_screen()
 
 # ----------------------------
 # Entry point
 # ----------------------------
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        input("\nPress Enter to exit...")
+    while True:
+        try:
+            main()
+            clear_screen()
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            input("\nPress Enter to exit...")
