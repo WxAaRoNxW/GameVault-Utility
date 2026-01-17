@@ -74,9 +74,8 @@ def goldberg_setup():
         sleep(2)
         webbrowser.open("https://steamid.xyz/")
         #while True:
-        user_id_input = inquirer.number(message="Enter your Steam64 ID:", 
-                                        default=76561202255233023,
-                                        replace_mode=True,
+        user_id_input = inquirer.text(message="Enter your Steam64 ID:", 
+                                        default="76561202255233023",
                                         long_instruction="Some games' save file are located in this Steam ID.\nBest to stick to one Steam ID or else you'll have to manually migrate your save files when you change midway.\nYou can choose a fake or your own, doesn't matter.",
                                         validate=validate_steam_id
                                         ).execute()
