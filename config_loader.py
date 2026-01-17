@@ -18,8 +18,8 @@ BASE_PATH               = get_exe_path().parent
 CONFIG_PATH             = BASE_PATH / gvu_config_dir / f"{custom_script_filename}.ini"                    # external config
 CONFIG_COPY_PATH        = BASE_PATH / gvu_config_dir / f"{custom_script_filename}{custom_script_copy_append}.ini" # external config copy
 GAMEVAULT_EXEC_CONFIG   = BASE_PATH.parent / "gamevault-exec"               # parent path's config file
-ORIGINAL_FILES_PATH     = BASE_PATH / gvu_config_dir / "_original files"
-CRACK_FILES_PATH        = BASE_PATH / gvu_config_dir / "_crack files"
+ORIGINAL_FILES_PATH     = BASE_PATH / gvu_config_dir / "original files"
+CRACK_FILES_PATH        = BASE_PATH / gvu_config_dir / "crack files"
 GLOBAL_CONFIG           = BASE_PATH.parent.parent / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
 
 def validate_paths():
