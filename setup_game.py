@@ -104,22 +104,27 @@ def goldberg_setup():
     id_content: str = "76561197960265728"
     exists = False
     # Check if files exists and Show existing data
-    if settings_name_path.is_file():
-        account_name = settings_name_path.read_text(encoding="utf-8").strip()
-        console.print(f"Current username is, {account_name}")
+    name_exists = settings_name_path.is_file()
+    id_exists = settings_id_path.is_file()
+    if name_exists or id_exists:
+        console.print("[yellow]You have an existing configuration from past pirated games that uses Goldberg.")
         exists = True
+        if name_exists:
+            account_name = settings_name_path.read_text(encoding="utf-8").strip()
+            console.print(f"Current username is, {account_name}")
+        if id_exists:
+            id_content = settings_id_path.read_text(encoding="utf-8").strip()
+            console.print(f"Current steam id is, {id_content}")
 
-    if settings_id_path.is_file():
-        id_content = settings_id_path.read_text(encoding="utf-8").strip()
-        console.print(f"Current steam id is, {id_content}")
-        exists = True
+        # Prompt setup to modify if exists
+        if exists:
+            proceed = inquirer.confirm(message="Would you like to change this?...", 
+                                       default=True).execute()
+            if not proceed: 
+                mark_done(CRACK_TYPES.Goldberg)
+                return
+            modify_data(account_name, id_content)
 
-    # Prompt setup to modify if exists
-    if exists:
-        proceed = inquirer.confirm(message="Proceed?...", 
-                               default=True).execute()
-        if not proceed: return
-        modify_data(account_name, id_content)
     # Else prompt setup
     else:
         modify_data(account_name, id_content)
