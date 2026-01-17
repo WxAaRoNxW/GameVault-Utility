@@ -46,7 +46,8 @@ def onlinefix_setup():
     proceed = inquirer.confirm(message="Have you ever added Spacewar to your steam library in the past by installing and removing it?", 
                                default=False).execute()
     if proceed:
-        console.print("Nothing to do")
+        console.print("Nothing to do, setup complete.")
+        mark_done(CRACK_TYPES.OnlineFix)
         return
     
     console.print("Steam will pop-up to ask you to install Spacewar (to add to your library)")
@@ -117,7 +118,8 @@ def goldberg_setup():
 
         # Prompt setup to modify if exists
         if exists:
-            proceed = inquirer.confirm(message="Would you like to change this?...", 
+            proceed = inquirer.confirm(message="Would you like to change this?...",
+                                       instruction="Not proceeding will complete the setup.",
                                        default=True).execute()
             if not proceed: 
                 mark_done(CRACK_TYPES.Goldberg)
