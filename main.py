@@ -68,10 +68,7 @@ class MenuChoices(Enum):
     Setup = 2,
     ChangeVersion = 3
 
-def get_setup_choice_str():
-    # Load suffix info from external config
-    setup_type = get_config_value(Config.Crack.str(), Config.Crack.Type, "CONTACT GAMEVAULT ADMIN")
-    setup_done = is_complete()
+def get_setup_choice_str(setup_type: str, setup_done: bool):
     # Build option 3 string
     match CRACK_TYPES[setup_type]:
         case CRACK_TYPES.OnlineFix:
@@ -84,8 +81,6 @@ def get_setup_choice_str():
             choice_string = "Option error, Contact GameVault Admin!"
     if setup_done:
         choice_string += " (complete)"
-    else:
-        choice_string += " (DO THIS FIRST)"
     
     return choice_string
 def get_change_version_choice_str():
@@ -99,16 +94,21 @@ def get_change_version_choice_str():
 # Main prompt loop
 # ----------------------------
 def main():
+    setup_type = get_config_value(Config.Crack.str(), Config.Crack.Type, "CONTACT GAMEVAULT ADMIN")
+    setup_done = is_complete()
     choice: MenuChoices | None = inquirer.select(
         message="Select an option:",
         instruction="Use Arrow Keys",
         choices=[
-            Choice(value=MenuChoices.Start,         name="Start game"),
-            Choice(value=MenuChoices.StartAlways,   name="Start game and don't ask again"),
-            Choice(value=MenuChoices.Setup,         name=get_setup_choice_str()),
-            Choice(value=MenuChoices.ChangeVersion, name=get_change_version_choice_str()),
-            Choice(value=None, name="Exit")
-        ],
+                Choice(value=MenuChoices.Start,         name="Start game"),
+                Choice(value=MenuChoices.StartAlways,   name="Start game and don't ask again"),
+                Choice(value=MenuChoices.Setup,         name=get_setup_choice_str(setup_type, setup_done)),
+                Choice(value=MenuChoices.ChangeVersion, name=get_change_version_choice_str()),
+                Choice(value=None, name="Exit")
+               ] if setup_done else [
+                Choice(value=MenuChoices.Setup,         name=get_setup_choice_str(setup_type, setup_done)),
+                Choice(value=None, name="Exit")
+               ],
         default="Original",
     ).execute()
     
