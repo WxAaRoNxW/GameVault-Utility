@@ -10,8 +10,9 @@ from InquirerPy import inquirer
 
 class CRACK_TYPES(Enum):
     OnlineFix = 0
-    Goldberg = 1,
+    Goldberg = 1
     RUNE = 2
+    Other = 3
 
 def mark_done(setup_type: CRACK_TYPES):
     match setup_type:
@@ -181,6 +182,8 @@ def is_complete() -> bool:
         case CRACK_TYPES.RUNE:
             # just get config value in _crack files folder instead
             setup_done = get_config_value(Config.Crack.str(), Config.Crack.SetupComplete, "False").lower() == "true"
+        case CRACK_TYPES.Other:
+            setup_done = True
         case _:
             setup_done = False
     return setup_done

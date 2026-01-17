@@ -25,8 +25,9 @@ GLOBAL_CONFIG           = BASE_PATH.parent.parent / f"{custom_script_filename}_g
 def validate_paths():
     try:
         if not GAMEVAULT_EXEC_CONFIG.is_file(): raise FileNotFoundError(f"gamevault-exec missing, is the {custom_script_name} script in the right path?")
-        if not ORIGINAL_FILES_PATH.is_dir(): raise FileNotFoundError(f"'_original files' folder missing, is this a {custom_script_name} compatible game?")
-        if not CRACK_FILES_PATH.is_dir(): raise FileNotFoundError(f"'_crack files' folder missing, is this a {custom_script_name} compatible game?")
+        has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
+        if has_original and not ORIGINAL_FILES_PATH.is_dir(): raise FileNotFoundError(f"'original files' folder missing, is this a {custom_script_name} compatible game?")
+        if has_original and not CRACK_FILES_PATH.is_dir(): raise FileNotFoundError(f"'crack files' folder missing, is this a {custom_script_name} compatible game?")
         if not CONFIG_COPY_PATH.is_file():
             if CONFIG_PATH.is_file(): 
                 console.print(f"'{custom_script_filename}{custom_script_copy_append}.ini' is missing, but still functional, ask GameVault Admin for repair file")
@@ -48,6 +49,7 @@ class Config:
         Executable: str = "Executable"
         GameVersion: str = "GameVersion"
         DontAskAgain: str = "DontAskAgain"
+        NoOriginal: str = "NoOriginal"
 
         def str():
             return "DEFAULT"
@@ -55,6 +57,7 @@ class Config:
     class Crack:
         Type: str = "Type"
         SetupComplete: str = "SetupComplete"
+        NoSetup: str = "NoSetup"
         
         def str():
             return "CRACK"
@@ -77,5 +80,5 @@ def set_config_values(section, key, value):
     config[section][key] = value
     config.write()
 
-validate_paths()
 config = ConfigObj(str(CONFIG_PATH))
+validate_paths()

@@ -69,6 +69,7 @@ class MenuChoices(Enum):
     ChangeVersion = 3
 
 def get_setup_choice_str(setup_type: str, setup_done: bool):
+    is_error = False
     # Build option 3 string
     match CRACK_TYPES[setup_type]:
         case CRACK_TYPES.OnlineFix:
@@ -79,7 +80,8 @@ def get_setup_choice_str(setup_type: str, setup_done: bool):
             choice_string = f"Per-Game Setup for '{setup_type}'"
         case _:
             choice_string = "Option error, Contact GameVault Admin!"
-    if setup_done:
+            is_error = True
+    if setup_done and not is_error:
         choice_string += " (complete)"
     
     return choice_string
@@ -90,25 +92,36 @@ def get_change_version_choice_str():
         choice_string += f". Current: {current_version}"
     return choice_string
 
+def setup_choices():
+    setup_type = get_config_value(Config.Crack.str(), Config.Crack.Type, "CONTACT GAMEVAULT ADMIN")
+    setup_done = is_complete()
+    has_setup = get_config_value(Config.Crack.str(), Config.Crack.NoSetup, "False").lower() == "false"
+    has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
+
+    choices: list = []
+    if setup_done:
+        choices.append(Choice(value=MenuChoices.Start,         name="Start game"))
+        choices.append(Choice(value=MenuChoices.StartAlways,   name="Start game and don't ask again"))
+        if has_setup:
+            choices.append(Choice(value=MenuChoices.Setup,     name=get_setup_choice_str(setup_type, setup_done)))
+        if has_original:
+            choices.append(Choice(value=MenuChoices.ChangeVersion, name=get_change_version_choice_str()))
+    else:
+        choices.append(Choice(value=MenuChoices.Setup,     name=get_setup_choice_str(setup_type, setup_done)))
+
+    choices.append(Choice(value=None, name="Exit"))
+
+    return choices
+
 # ----------------------------
 # Main prompt loop
 # ----------------------------
 def main():
-    setup_type = get_config_value(Config.Crack.str(), Config.Crack.Type, "CONTACT GAMEVAULT ADMIN")
-    setup_done = is_complete()
+    choices = setup_choices()
     choice: MenuChoices | None = inquirer.select(
         message="Select an option:",
+        choices=choices,
         instruction="Use Arrow Keys",
-        choices=[
-                Choice(value=MenuChoices.Start,         name="Start game"),
-                Choice(value=MenuChoices.StartAlways,   name="Start game and don't ask again"),
-                Choice(value=MenuChoices.Setup,         name=get_setup_choice_str(setup_type, setup_done)),
-                Choice(value=MenuChoices.ChangeVersion, name=get_change_version_choice_str()),
-                Choice(value=None, name="Exit")
-               ] if setup_done else [
-                Choice(value=MenuChoices.Setup,         name=get_setup_choice_str(setup_type, setup_done)),
-                Choice(value=None, name="Exit")
-               ],
         default="Original",
     ).execute()
     
