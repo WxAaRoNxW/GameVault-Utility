@@ -3,13 +3,14 @@ from pathlib import Path
 import sys
 import subprocess
 from setup_game import CRACK_TYPES, is_complete, one_time_setup
-from config_loader import BASE_PATH, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values
+from config_loader import BASE_PATH, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version
 from util import clear_screen, get_exe_path, sleep
 from version_changer import change_version
 from gamevault_exec_handler import set_executable
 from logger import console
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
+from InquirerPy.utils import color_print
 
 # ----------------------------
 # Functions
@@ -117,6 +118,20 @@ def setup_choices():
 # Main prompt loop
 # ----------------------------
 def main():
+    color_print(formatted_text=[
+                    ("class:gg", "Game"),
+                    ("", "Vault"),
+                    ("class:yy", " Utility"),
+                    ("", " - "),
+                    ("class:vv", script_version)
+                ],
+                style={
+                    "": "bold underline",
+                    "yy": "cyan",
+                    "gg": "#4f46af",
+                    "vv": "yellow"
+                })
+
     choices = setup_choices()
     choice: MenuChoices | None = inquirer.select(
         message="Select an option:",
