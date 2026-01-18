@@ -24,23 +24,22 @@ CRACK_FILES_PATH        = BASE_PATH / gvu_config_dir / "crack files"
 GLOBAL_CONFIG           = BASE_PATH.parent.parent / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
 
 def validate_paths():
-    try:
-        if not GAMEVAULT_EXEC_CONFIG.is_file(): raise FileNotFoundError(f"gamevault-exec missing, is the {custom_script_name} script in the right path?")
-        has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
-        if has_original and not ORIGINAL_FILES_PATH.is_dir(): raise FileNotFoundError(f"'original files' folder missing, is this a {custom_script_name} compatible game?")
-        if has_original and not CRACK_FILES_PATH.is_dir(): raise FileNotFoundError(f"'crack files' folder missing, is this a {custom_script_name} compatible game?")
-        if not CONFIG_COPY_PATH.is_file():
-            if CONFIG_PATH.is_file(): 
-                console.print(f"'{custom_script_filename}{custom_script_copy_append}.ini' is missing, but still functional, ask GameVault Admin for repair file")
-                pause(clear=True)
-            else:
-                raise FileNotFoundError(f"'{custom_script_filename}{custom_script_copy_append}.ini' is missing, ask GameVault Admin for repair file")
-        if not CONFIG_PATH.is_file(): # copy if main config is missing
-            shutil.copy2(CONFIG_COPY_PATH, CONFIG_PATH)
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        input("\nPress Enter to exit...")
+    global config
+    if not CONFIG_COPY_PATH.is_file():
+        if CONFIG_PATH.is_file(): 
+            console.print(f"'{custom_script_filename}{custom_script_copy_append}.ini' is missing, but still functional, ask GameVault Admin for repair file")
+            pause(clear=True)
+        else:
+            raise FileNotFoundError(f"'{custom_script_filename}{custom_script_copy_append}.ini' is missing, ask GameVault Admin for repair file")
+    if not CONFIG_PATH.is_file(): # copy if main config is missing
+        shutil.copy2(CONFIG_COPY_PATH, CONFIG_PATH)
+
+    config = ConfigObj(str(CONFIG_PATH))
+
+    if not GAMEVAULT_EXEC_CONFIG.is_file(): raise FileNotFoundError(f"gamevault-exec missing, is the {custom_script_name} script in the right path?")
+    has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
+    if has_original and not ORIGINAL_FILES_PATH.is_dir(): raise FileNotFoundError(f"'original files' folder missing, is this a {custom_script_name} compatible game?")
+    if has_original and not CRACK_FILES_PATH.is_dir(): raise FileNotFoundError(f"'crack files' folder missing, is this a {custom_script_name} compatible game?")
 
 # Config Schematic
 @dataclass(frozen=True)
@@ -81,5 +80,4 @@ def set_config_values(section, key, value):
     config[section][key] = value
     config.write()
 
-config = ConfigObj(str(CONFIG_PATH))
-validate_paths()
+config: ConfigObj

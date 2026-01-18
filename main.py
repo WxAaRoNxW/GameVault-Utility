@@ -3,7 +3,7 @@ from pathlib import Path
 import sys
 import subprocess
 from setup_game import CRACK_TYPES, is_complete, one_time_setup
-from config_loader import BASE_PATH, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version
+from config_loader import BASE_PATH, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version, validate_paths
 from util import clear_screen, get_exe_path, sleep
 from version_changer import change_version
 from gamevault_exec_handler import set_executable
@@ -156,11 +156,12 @@ def main():
 # Entry point
 # ----------------------------
 if __name__ == "__main__":
-    while True:
-        try:
+    try:
+        while True:
+            validate_paths()
             main()
             clear_screen()
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-            input("\nPress Enter to exit...")
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        input("\nPress Enter to exit...")
