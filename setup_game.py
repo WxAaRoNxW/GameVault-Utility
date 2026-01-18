@@ -4,7 +4,8 @@ from pathlib import Path
 import webbrowser
 from config_loader import Config, get_config_value, set_config_values, gv_name
 from global_config import GlobalConfig, get_global_config_value, set_global_config_value
-from util import clear_screen, clear_input_buffer, pause, prompt_yes_no, sleep, validate_steam_id
+from prompt_validator import validate_steam_id
+from util import clear_screen, clear_input_buffer, pause, prompt_yes_no, sleep
 from logger import console
 from InquirerPy import inquirer
 
@@ -25,6 +26,40 @@ def mark_done(setup_type: CRACK_TYPES):
         case _:
             console.print("Can't identify crack type, contact GameVault admin.")
             pause(clear=True)
+
+def is_complete() -> bool:
+    setup_type = CRACK_TYPES[get_config_value(Config.Crack.str(), Config.Crack.Type, "")]
+    setup_done = False
+    match setup_type:
+        case CRACK_TYPES.OnlineFix:
+            # get global config value
+            setup_done = get_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.OnlineFix, "False").lower() == "true"
+        case CRACK_TYPES.Goldberg:
+            # Get user Roaming folder
+            # if os.name == "nt":
+            #     roaming = Path(os.getenv("APPDATA"))
+            # else:
+            #     roaming = Path.home() / ".config"
+            
+            # settings_folder = roaming / "Goldberg SteamEmu Saves" / "settings"
+            # settings_folder.mkdir(parents=True, exist_ok=True)
+            # name_file = "account_name.txt"
+            # settings_name_path = settings_folder / name_file
+
+            # # check if file exists
+            # if not settings_name_path.is_file(): setup_done = False
+            # # check if username is "Noob"
+            # elif settings_name_path.read_text(encoding="utf-8").strip() == "Noob": setup_done = False
+            # else: setup_done = True # already modified
+            
+            setup_done = get_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.Goldberg, "False").lower() == "true"
+
+        case CRACK_TYPES.RUNE:
+            # just get config value in _crack files folder instead
+            setup_done = get_config_value(Config.Crack.str(), Config.Crack.SetupComplete, "False").lower() == "true"
+        case _:
+            setup_done = False
+    return setup_done
 
 # 3. One-time global setup
 def one_time_setup():
@@ -151,39 +186,3 @@ def rune_setup():
     console.print("Unimplemented")
     clear_screen()
     return
-
-def is_complete() -> bool:
-    setup_type = CRACK_TYPES[get_config_value(Config.Crack.str(), Config.Crack.Type, "")]
-    setup_done = False
-    match setup_type:
-        case CRACK_TYPES.OnlineFix:
-            # get global config value
-            setup_done = get_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.OnlineFix, "False").lower() == "true"
-        case CRACK_TYPES.Goldberg:
-            # Get user Roaming folder
-            # if os.name == "nt":
-            #     roaming = Path(os.getenv("APPDATA"))
-            # else:
-            #     roaming = Path.home() / ".config"
-            
-            # settings_folder = roaming / "Goldberg SteamEmu Saves" / "settings"
-            # settings_folder.mkdir(parents=True, exist_ok=True)
-            # name_file = "account_name.txt"
-            # settings_name_path = settings_folder / name_file
-
-            # # check if file exists
-            # if not settings_name_path.is_file(): setup_done = False
-            # # check if username is "Noob"
-            # elif settings_name_path.read_text(encoding="utf-8").strip() == "Noob": setup_done = False
-            # else: setup_done = True # already modified
-            
-            setup_done = get_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.Goldberg, "False").lower() == "true"
-
-        case CRACK_TYPES.RUNE:
-            # just get config value in _crack files folder instead
-            setup_done = get_config_value(Config.Crack.str(), Config.Crack.SetupComplete, "False").lower() == "true"
-        case CRACK_TYPES.Other:
-            setup_done = True
-        case _:
-            setup_done = False
-    return setup_done

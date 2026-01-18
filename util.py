@@ -47,15 +47,6 @@ def prompt_yes_no(message: str, default: bool | None = None) -> bool:
 
         console.print("Please enter y or n.")
 
-def validate_steam_id(id: str):
-    try:
-        id = int(id)
-    except:
-        id = 0
-    if id <= 76561202255233023 and id >= 76561197960265728:
-        return True
-    return False
-
 def pause(clear: bool = False):
     console.print()
     input("Press Enter to continue...")
