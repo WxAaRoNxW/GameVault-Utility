@@ -179,3 +179,5 @@ _crack files/
 _original files/
 Engine/
 gvu_*
+_*
+*.exe

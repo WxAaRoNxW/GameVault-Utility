@@ -63,6 +63,11 @@ class Config:
         
         def str():
             return "CRACK"
+    @dataclass(frozen=True)
+    class Setup:
+        FileEdits: str = "FileEdits"
+        def str():
+            return "SETUP"
 
 # ----------------------------
 # Load external config
@@ -86,13 +91,8 @@ setup_keys_literal: TypeAlias = Literal['Path', 'Message', 'Instructions', 'Long
 setup_dict_literal: TypeAlias = dict[setup_keys_literal, str]
 def parseSetupOptions() -> list[setup_dict_literal]:
     keys = ("Path", "Message", 'Instructions', 'Long Instructions', 'Default', 'Key Action', 'Validator', "Section", "Key")
-    string = config["SETUP"]["FileEdits"].strip()
+    string = get_config_value(Config.Setup.str(), Config.Setup.FileEdits, "").strip()
     stringList = string.split(",,")
-
-    # points = [
-    #     tuple(map(str, line.split(" ;; ")))
-    #     for line in stringList
-    # ]
 
     points = []
     for line in stringList:
@@ -104,9 +104,6 @@ def parseSetupOptions() -> list[setup_dict_literal]:
     # Validate tuple length
     if not all(len(t) == 9 for t in points):
         raise ValueError("Each entry must be an 9-tuple")
-
-    #for element in points:
-
 
     # result = [dict(zip(keys, tupleVal)) for tupleVal in points]
     result: setup_keys_literal = []
