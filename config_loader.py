@@ -6,7 +6,7 @@ from configobj import ConfigObj
 from util import get_exe_path, pause
 from logger import console
 
-script_version = "v2.1.0"
+script_version = "v3.0.0"
 
 gv_name = "GameVault"
 gvu_config_dir = "_GVU/GVU config"

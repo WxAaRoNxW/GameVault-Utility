@@ -1,6 +1,22 @@
 # Changelog
 <details open>
 <summary><b>
+v3.0.0
+</b></summary>
+
+- Added
+    - Dynamic config based prompts to avoid constantly giving new updates.
+
+- Changed
+    - Moved definitions.
+
+- Fixed
+    - Goldberg Steam ID prompt's Default now shows existing ID, unless not, which the default would be the lowest Steam ID possible.
+
+</details>
+
+<details>
+<summary><b>
 v2.1.0
 </b></summary>
 
