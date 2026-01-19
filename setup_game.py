@@ -1,11 +1,11 @@
 from enum import Enum
 import os
 from pathlib import Path
-from typing import Literal
+from typing import Literal, TypeAlias
 import webbrowser
 
 from configobj import ConfigObj
-from config_loader import Config, get_config_value, parseSetupOptions, set_config_values, gv_name, setup_dict_literal
+from config_loader import Config, get_config_value, parse_tuple_list_string, set_config_values, gv_name
 from global_config import GlobalConfig, get_global_config_value, set_global_config_value
 from prompt_key_actions import get_l_instruction_suffix, get_keybindings
 from prompt_validator import validate_prompt, validate_steam_id
@@ -179,8 +179,16 @@ def goldberg_setup():
     
     clear_screen()
 
+setup_keys_literal: TypeAlias = Literal['Path', 'Message', 'Instructions', 'Long Instructions', 'Default', 'Key Action', 'Validator', 'Section', 'Key']
+setup_dict_literal: TypeAlias = dict[setup_keys_literal, str]
+def parse_setup_options() -> list[setup_dict_literal]:
+    file_edits = get_config_value(Config.Setup.str(), Config.Setup.FileEdits, "").strip()
+    prompt_dicts_list = parse_tuple_list_string(file_edits, 9, ("Path", "Message", 'Instructions', 'Long Instructions', 'Default', 'Key Action', 'Validator', "Section", "Key"))
+
+    return prompt_dicts_list
+
 def other_setup():
-    prompt_dicts_list = parseSetupOptions()
+    prompt_dicts_list = parse_setup_options()
     for prompt_dict in prompt_dicts_list:
         config_other = ConfigObj(str(Path(os.path.expandvars(prompt_dict["Path"])).resolve()))
         

@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 import shutil
-from typing import Literal, TypeAlias
 from configobj import ConfigObj
 
 from util import get_exe_path, pause
@@ -87,27 +86,25 @@ def set_config_values(section, key, value):
     config[section][key] = value
     config.write()
 
-setup_keys_literal: TypeAlias = Literal['Path', 'Message', 'Instructions', 'Long Instructions', 'Default', 'Key Action', 'Validator', 'Section', 'Key']
-setup_dict_literal: TypeAlias = dict[setup_keys_literal, str]
-def parseSetupOptions() -> list[setup_dict_literal]:
-    keys = ("Path", "Message", 'Instructions', 'Long Instructions', 'Default', 'Key Action', 'Validator', "Section", "Key")
-    string = get_config_value(Config.Setup.str(), Config.Setup.FileEdits, "").strip()
-    stringList = string.split(",,")
+def parse_tuple_list_string(content: str, required_length: int, keys: tuple) -> list[dict[str, str]]:
+    if required_length == 0:
+        return False
+    content_list = content.strip().split(",,") 
 
-    points = []
-    for line in stringList:
+    content_tuple_list = []
+    for line in content_list:
         line_split = []
         for element in line.split(" ;; "):
             line_split.append(element.strip())
-        points.append(line_split)
-
+        content_tuple_list.append(line_split)
+    
     # Validate tuple length
-    if not all(len(t) == 9 for t in points):
-        raise ValueError("Each entry must be an 9-tuple")
-
+    if not all(len(t) == required_length for t in content_tuple_list):
+        raise ValueError(f"Each entry must be a/n {required_length}-tuple")
+    
     # result = [dict(zip(keys, tupleVal)) for tupleVal in points]
-    result: setup_keys_literal = []
-    for tupleVal in points:
+    result: list[dict[str, str]] = []
+    for tupleVal in content_tuple_list:
         pairsList = zip(keys, tupleVal) # 2 tuples will be paired together
         dict_pairs = dict(pairsList)
         result.append(dict_pairs)
