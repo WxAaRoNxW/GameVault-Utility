@@ -79,6 +79,8 @@ def get_setup_choice_str(setup_type: str, setup_done: bool):
             choice_string = f"One-time global setup for '{setup_type}'"
         case CRACK_TYPES.RUNE:
             choice_string = f"Per-Game Setup for '{setup_type}'"
+        case CRACK_TYPES.Other:
+            choice_string = f"Per-Game Setup"
         case _:
             choice_string = "Option error, Contact GameVault Admin!"
             is_error = True

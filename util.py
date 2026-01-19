@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import sys
 import time
+import uuid
 from logger import console
 
 def get_exe_path() -> Path:

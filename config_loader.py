@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import shutil
+from typing import Literal, TypeAlias
 from configobj import ConfigObj
 
 from util import get_exe_path, pause
@@ -80,5 +81,40 @@ def set_config_values(section, key, value):
         config[section] = {}
     config[section][key] = value
     config.write()
+
+setup_keys_literal: TypeAlias = Literal['Path', 'Message', 'Instructions', 'Long Instructions', 'Default', 'Key Action', 'Validator', 'Section', 'Key']
+setup_dict_literal: TypeAlias = dict[setup_keys_literal, str]
+def parseSetupOptions() -> list[setup_dict_literal]:
+    keys = ("Path", "Message", 'Instructions', 'Long Instructions', 'Default', 'Key Action', 'Validator', "Section", "Key")
+    string = config["SETUP"]["FileEdits"].strip()
+    stringList = string.split(",,")
+
+    # points = [
+    #     tuple(map(str, line.split(" ;; ")))
+    #     for line in stringList
+    # ]
+
+    points = []
+    for line in stringList:
+        line_split = []
+        for element in line.split(" ;; "):
+            line_split.append(element.strip())
+        points.append(line_split)
+
+    # Validate tuple length
+    if not all(len(t) == 9 for t in points):
+        raise ValueError("Each entry must be an 9-tuple")
+
+    #for element in points:
+
+
+    # result = [dict(zip(keys, tupleVal)) for tupleVal in points]
+    result: setup_keys_literal = []
+    for tupleVal in points:
+        pairsList = zip(keys, tupleVal) # 2 tuples will be paired together
+        dict_pairs = dict(pairsList)
+        result.append(dict_pairs)
+
+    return result
 
 config: ConfigObj

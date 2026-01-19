@@ -1,10 +1,14 @@
 from enum import Enum
 import os
 from pathlib import Path
+from typing import Literal
 import webbrowser
-from config_loader import Config, get_config_value, set_config_values, gv_name
+
+from configobj import ConfigObj
+from config_loader import Config, get_config_value, parseSetupOptions, set_config_values, gv_name, setup_dict_literal
 from global_config import GlobalConfig, get_global_config_value, set_global_config_value
-from prompt_validator import validate_steam_id
+from prompt_key_actions import get_l_instruction_suffix, get_keybindings
+from prompt_validator import validate_prompt, validate_steam_id
 from util import clear_screen, clear_input_buffer, pause, prompt_yes_no, sleep
 from logger import console
 from InquirerPy import inquirer
@@ -14,6 +18,7 @@ class CRACK_TYPES(Enum):
     Goldberg = 1
     RUNE = 2
     Other = 3
+    NoSetup = 4
 
 def mark_done(setup_type: CRACK_TYPES):
     match setup_type:
@@ -21,8 +26,10 @@ def mark_done(setup_type: CRACK_TYPES):
             set_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.OnlineFix, "True")
         case CRACK_TYPES.Goldberg:
             set_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.Goldberg, "True")
-        case CRACK_TYPES.RUNE:
+        case CRACK_TYPES.RUNE | CRACK_TYPES.Other:
             set_config_values(Config.Crack.str(), Config.Crack.SetupComplete, "True")
+        case CRACK_TYPES.NoSetup:
+            return
         case _:
             console.print("Can't identify crack type, contact GameVault admin.")
             pause(clear=True)
@@ -54,9 +61,11 @@ def is_complete() -> bool:
             
             setup_done = get_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.Goldberg, "False").lower() == "true"
 
-        case CRACK_TYPES.RUNE:
+        case CRACK_TYPES.RUNE | CRACK_TYPES.Other:
             # just get config value in _crack files folder instead
             setup_done = get_config_value(Config.Crack.str(), Config.Crack.SetupComplete, "False").lower() == "true"
+        case CRACK_TYPES.NoSetup:
+            setup_done = True
         case _:
             setup_done = False
     return setup_done
@@ -74,6 +83,8 @@ def one_time_setup():
             goldberg_setup()
         case CRACK_TYPES.RUNE:
             rune_setup()
+        case CRACK_TYPES.Other:
+            other_setup()
         case _:
             console.print("Can't identify crack type, contact GameVault admin.")
             pause(clear=True)
@@ -167,6 +178,38 @@ def goldberg_setup():
         modify_data(account_name, id_content)
     
     clear_screen()
+
+def other_setup():
+    prompt_dicts_list = parseSetupOptions()
+    for prompt_dict in prompt_dicts_list:
+        config_other = ConfigObj(str(Path(os.path.expandvars(prompt_dict["Path"])).resolve()))
+        
+        default_value = config_other[prompt_dict["Section"]].get(
+            prompt_dict["Key"], 
+            "" if prompt_dict["Default"] == "None" else prompt_dict["Default"]
+            )
+        # if config_other[prompt_dict["Section"]].get(prompt_dict["Key"], ""):
+        #     default_value = config_other[prompt_dict["Section"]].get(prompt_dict["Key"], "")
+        # else:
+        #     default_value = "" if prompt_dict["Default"] == "None" else prompt_dict["Default"]
+
+        l_instruction = "" if prompt_dict["Long Instructions"] == "None" else prompt_dict["Long Instructions"]
+        l_instruction = "\n".join([get_l_instruction_suffix(prompt_dict["Key Action"]), l_instruction]).strip()
+        prompt = inquirer.text(message=prompt_dict["Message"],
+                                      default=default_value,
+                                      instruction= "" if prompt_dict["Instructions"] == "None" else prompt_dict["Instructions"],
+                                      long_instruction=l_instruction,
+                                      validate=validate_prompt(prompt_dict["Validator"])
+                                      )
+        get_keybindings(prompt=prompt, key_action=prompt_dict["Key Action"])
+        user_id_input = prompt.execute()
+
+        config_other[prompt_dict["Section"]][prompt_dict["Key"]] = user_id_input
+        config_other.write()
+        #Path(os.path.expandvars(prompt_dict["Path"])).resolve().write_text(user_id_input, encoding="utf-8")
+    console.print(f"Setup complete!")
+    pause(clear=True)
+    mark_done(CRACK_TYPES.Other)
 
 # RUNE is a per game modification
 def rune_setup():
