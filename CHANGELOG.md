@@ -1,6 +1,20 @@
 # Changelog
 <details open>
 <summary><b>
+v3.1.0
+</b></summary>
+
+- Added
+    - Dynamic config based Cymbolic Linking to avoid data wipes during updates for games with player data in game folder.
+
+    - Add more error handling.
+- Changed
+    - Program now requires Administration for Symbolic Linking.
+
+</details>
+
+<details>
+<summary><b>
 v3.0.0
 </b></summary>
 
