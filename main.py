@@ -1,3 +1,4 @@
+import ctypes
 from enum import Enum
 from pathlib import Path
 import sys
@@ -158,6 +159,12 @@ def main():
 # Entry point
 # ----------------------------
 if __name__ == "__main__":
+    if not ctypes.windll.shell32.IsUserAnAdmin():
+        print("Requesting admin privileges...")
+        params = f'"{sys.argv[0]}" {" ".join(sys.argv[1:])}'
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, params, None, 1)
+        sys.exit(0)
+
     try:
         while True:
             validate_paths()

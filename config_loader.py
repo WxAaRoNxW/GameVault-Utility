@@ -65,6 +65,7 @@ class Config:
     @dataclass(frozen=True)
     class Setup:
         FileEdits: str = "FileEdits"
+        PathMoveLinking: str = "PathMoveLinking"
         def str():
             return "SETUP"
 
@@ -89,12 +90,14 @@ def set_config_values(section, key, value):
 def parse_tuple_list_string(content: str, required_length: int, keys: tuple) -> list[dict[str, str]]:
     if required_length == 0:
         return False
+    if content == "":
+        raise Exception("string empty")
     content_list = content.strip().split(",,") 
 
     content_tuple_list = []
     for line in content_list:
         line_split = []
-        for element in line.split(" ;; "):
+        for element in line.split(";;"):
             line_split.append(element.strip())
         content_tuple_list.append(line_split)
     

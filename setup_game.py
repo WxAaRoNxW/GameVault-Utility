@@ -9,6 +9,7 @@ from config_loader import Config, get_config_value, parse_tuple_list_string, set
 from global_config import GlobalConfig, get_global_config_value, set_global_config_value
 from prompt_key_actions import get_l_instruction_suffix, get_keybindings
 from prompt_validator import validate_prompt, validate_steam_id
+from symlink import move_source_and_link_dir
 from util import clear_screen, clear_input_buffer, pause, prompt_yes_no, sleep
 from logger import console
 from InquirerPy import inquirer
@@ -74,6 +75,9 @@ def is_complete() -> bool:
 def one_time_setup():
     # Get crack type
     setup_type = CRACK_TYPES[get_config_value(Config.Crack.str(), Config.Crack.Type, "N/A")]
+    pathlink_string = get_config_value(Config.Setup.str(), Config.Setup.PathMoveLinking, '')
+    if pathlink_string != '':
+        move_source_and_link_dir(pathlink_string, exist_ok=True)
 
     # Run crack type's method using switch case
     match setup_type:
@@ -188,7 +192,11 @@ def parse_setup_options() -> list[setup_dict_literal]:
     return prompt_dicts_list
 
 def other_setup():
-    prompt_dicts_list = parse_setup_options()
+    try:
+        prompt_dicts_list = parse_setup_options()
+    except:
+        raise Exception("Prompt empty even though setup exists.")
+
     for prompt_dict in prompt_dicts_list:
         config_other = ConfigObj(str(Path(os.path.expandvars(prompt_dict["Path"])).resolve()))
         
