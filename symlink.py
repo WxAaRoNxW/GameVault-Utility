@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import shutil
 from typing import Literal, TypeAlias
-from config_loader import parse_tuple_list_string
+from config_loader import DEBUG, parse_tuple_list_string
 
 
 setup_keys_literal: TypeAlias = Literal['Target', 'Destination', 'Type']
@@ -52,5 +52,7 @@ def move_source_and_link_dir(paths: list[setup_dict_literal], exist_ok: bool = F
             else: raise FileExistsError(f"Link path is an actual file: {link}")
         
         source_is_dir = type == "Directory"
+        if DEBUG: return
+        
         Path(link).symlink_to(source, source_is_dir)
         

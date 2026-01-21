@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 import subprocess
 from setup_game import CRACK_TYPES, is_complete, one_time_setup
-from config_loader import BASE_PATH, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version, validate_paths
+from config_loader import BASE_PATH, DEBUG, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version, validate_paths
 from util import clear_screen, get_exe_path, sleep
 from version_changer import change_version
 from gamevault_exec_handler import set_executable
@@ -159,11 +159,12 @@ def main():
 # Entry point
 # ----------------------------
 if __name__ == "__main__":
-    if not ctypes.windll.shell32.IsUserAnAdmin():
-        print("Requesting admin privileges...")
-        params = f'"{sys.argv[0]}" {" ".join(sys.argv[1:])}'
-        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, params, None, 1)
-        sys.exit(0)
+    if not DEBUG:
+        if not ctypes.windll.shell32.IsUserAnAdmin():
+            print("Requesting admin privileges...")
+            params = f'"{sys.argv[0]}" {" ".join(sys.argv[1:])}'
+            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, params, None, 1)
+            sys.exit(0)
 
     try:
         while True:

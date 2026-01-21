@@ -1,9 +1,15 @@
 from dataclasses import dataclass
 import shutil
+import sys
 from configobj import ConfigObj
 
 from util import get_exe_path, pause
 from logger import console
+
+if getattr(sys, 'frozen', False):
+    DEBUG = False
+else:
+    DEBUG = True
 
 script_version = "v3.1.0"
 
