@@ -137,7 +137,7 @@ def goldberg_setup():
         # Prompt setup to modify if exists
         if exists:
             proceed = inquirer.confirm(message="Would you like to change this?...",
-                                       instruction="Not proceeding will complete the setup. [Y/n]",
+                                       instruction="Not proceeding will complete the setup. (Y/n)",
                                        default=True).execute()
             if not proceed: 
                 mark_done(CRACK_TYPES.Goldberg)
@@ -253,7 +253,7 @@ def goldberg_old_setup():
         # Prompt setup to modify if exists
         if exists:
             proceed = inquirer.confirm(message="Would you like to change this?...",
-                                       instruction="Not proceeding will complete the setup.",
+                                       instruction="Not proceeding will complete the setup. (Y/n)",
                                        default=True).execute()
             if not proceed: 
                 mark_done(CRACK_TYPES.Goldberg)
@@ -269,7 +269,6 @@ def goldberg_old_setup():
 def prompt_name(current_name: str):
     name_input = inquirer.text(message="Enter your in-game name:", 
                                 default=current_name,
-                                instruction="This is what you'll be seen as in-game",
                                 validate= lambda result: len(result) > 0
                                 ).execute()
     return name_input
