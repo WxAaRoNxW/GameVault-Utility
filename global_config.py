@@ -10,6 +10,7 @@ class GlobalConfig:
     class Setup:
         OnlineFix: str = "OnlineFix"
         Goldberg: str = "Goldberg"
+        Goldberg_Old: str = "Goldberg Old"
 
         def str():
             return "SETUP COMPLETE"

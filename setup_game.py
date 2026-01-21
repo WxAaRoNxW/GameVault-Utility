@@ -5,13 +5,12 @@ from typing import Literal, TypeAlias
 import webbrowser
 
 from configobj import ConfigObj
-from config_loader import Config, get_config_value, parse_tuple_list_string, set_config_values, gv_name
 from config_loader import ROAMING, Config, get_config_value, parse_tuple_list_string, set_config_values, gv_name
 from global_config import GlobalConfig, get_global_config_value, set_global_config_value
 from prompt_key_actions import get_l_instruction_suffix, get_keybindings
 from prompt_validator import validate_prompt, validate_steam_id
 from symlink import move_source_and_link_dir
-from util import clear_screen, clear_input_buffer, pause, prompt_yes_no, sleep
+from util import clear_screen, pause, sleep
 from logger import console
 from InquirerPy import inquirer
 
@@ -20,7 +19,8 @@ class CRACK_TYPES(Enum):
     Goldberg = 1
     RUNE = 2
     Other = 3
-    NoSetup = 4
+    Goldberg_Old = 4
+    NoSetup = -1
 
 def mark_done(setup_type: CRACK_TYPES):
     match setup_type:
@@ -28,6 +28,8 @@ def mark_done(setup_type: CRACK_TYPES):
             set_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.OnlineFix, "True")
         case CRACK_TYPES.Goldberg:
             set_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.Goldberg, "True")
+        case CRACK_TYPES.Goldberg_Old:
+            set_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.Goldberg_Old, "True")
         case CRACK_TYPES.RUNE | CRACK_TYPES.Other:
             set_config_values(Config.Crack.str(), Config.Crack.SetupComplete, "True")
         case CRACK_TYPES.NoSetup:
@@ -44,30 +46,14 @@ def is_complete() -> bool:
             # get global config value
             setup_done = get_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.OnlineFix, "False").lower() == "true"
         case CRACK_TYPES.Goldberg:
-            # Get user Roaming folder
-            # if os.name == "nt":
-            #     roaming = Path(os.getenv("APPDATA"))
-            # else:
-            #     roaming = Path.home() / ".config"
-            
-            # settings_folder = roaming / "Goldberg SteamEmu Saves" / "settings"
-            # settings_folder.mkdir(parents=True, exist_ok=True)
-            # name_file = "account_name.txt"
-            # settings_name_path = settings_folder / name_file
-
-            # # check if file exists
-            # if not settings_name_path.is_file(): setup_done = False
-            # # check if username is "Noob"
-            # elif settings_name_path.read_text(encoding="utf-8").strip() == "Noob": setup_done = False
-            # else: setup_done = True # already modified
-            
-            setup_done = get_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.Goldberg, "False").lower() == "true"
-
+            setup_done = get_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.Goldberg, "False").lower() == "true"            
         case CRACK_TYPES.RUNE | CRACK_TYPES.Other:
             # just get config value in _crack files folder instead
             setup_done = get_config_value(Config.Crack.str(), Config.Crack.SetupComplete, "False").lower() == "true"
         case CRACK_TYPES.NoSetup:
             setup_done = True
+        case CRACK_TYPES.Goldberg_Old:
+            setup_done = get_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.Goldberg_Old, "False").lower() == "true"
         case _:
             setup_done = False
     return setup_done
@@ -85,6 +71,8 @@ def one_time_setup():
         case CRACK_TYPES.OnlineFix:
             onlinefix_setup()
         case CRACK_TYPES.Goldberg:
+            goldberg_setup()
+        case CRACK_TYPES.Goldberg_Old:
             goldberg_old_setup()
         case CRACK_TYPES.RUNE:
             rune_setup()
@@ -110,6 +98,57 @@ def onlinefix_setup():
     console.print("Once done, setup is complete for EVERY OnlineFix games for THIS Steam account")
     pause()
     mark_done(CRACK_TYPES.OnlineFix)
+
+# Goldberg setup
+def goldberg_setup():
+    file_name = "configs.user.ini"
+    def modify_data(current_name, current_id):
+        # Prompt user
+        name_input = prompt_name(current_name)
+        user_id_input = prompt_steam_id(current_id)
+            
+        gse_config["user::general"]["account_name"] = name_input
+        gse_config["user::general"]["account_steamid"] = user_id_input
+        
+        gse_config.write()
+
+        console.print(f"Setup complete for Goldberg in {settings_folder}")
+        pause(clear=True)
+        # Mark config complete
+        mark_done(CRACK_TYPES.Goldberg)
+    
+    settings_folder = ROAMING / "GSE Saves" / "settings"
+    settings_folder.mkdir(parents=True, exist_ok=True)
+    settings_path = settings_folder / file_name
+    account_name: str = gv_name
+    id_content: str = "76561197960265728"
+    exists = False
+    # Check if files exists and Show existing data
+    file_exists = settings_path.is_file()
+    if file_exists:
+        console.print("[yellow]You have an existing configuration from past pirated games that uses Goldberg.")
+        exists = True
+        gse_config = ConfigObj(str(settings_path))
+        account_name = gse_config["user::general"].get("account_name", gv_name)
+        id_content = gse_config["user::general"].get("account_steamid", id_content)
+        console.print(f"Current username is: {account_name}")
+        console.print(f"Current steam id is: {id_content}")
+
+        # Prompt setup to modify if exists
+        if exists:
+            proceed = inquirer.confirm(message="Would you like to change this?...",
+                                       instruction="Not proceeding will complete the setup. [Y/n]",
+                                       default=True).execute()
+            if not proceed: 
+                mark_done(CRACK_TYPES.Goldberg)
+                return
+            modify_data(account_name, id_content)
+
+    # Else prompt setup
+    else:
+        modify_data(account_name, id_content)
+    
+    clear_screen()
 
 setup_keys_literal: TypeAlias = Literal['Path', 'Message', 'Instructions', 'Long Instructions', 'Default', 'Key Action', 'Validator', 'Section', 'Key']
 setup_dict_literal: TypeAlias = dict[setup_keys_literal, str]
@@ -174,38 +213,23 @@ def rune_setup():
     clear_screen()
     return
 
-# Goldberg setup
 def goldberg_old_setup():
     name_file = "account_name.txt"
     steam_id_file = "user_steam_id.txt"
     def modify_data(current_name, current_id):
         # Prompt user
-        name_input = inquirer.text(message="Enter your name:", 
-                      default=current_name,
-                      instruction="This is what you'll be seen as in-game",
-                      validate= lambda result: len(result) > 0
-                      ).execute()
-
-        console.print("A web page will open for you to find your Steam ID")
-        sleep(2)
-        webbrowser.open("https://steamid.xyz/")
-        #while True:
-        user_id_input = inquirer.text(message="Enter your Steam64 ID:", 
-                                        default=current_id,
-                                        long_instruction="Some games' save file are located in this Steam ID.\nBest to stick to one Steam ID or else you'll have to manually migrate your save files when you change midway.\nYou can choose a fake or your own, doesn't matter.",
-                                        validate=validate_steam_id
-                                        ).execute()
+        name_input = prompt_name(current_name=current_name)
+        user_id_input = prompt_steam_id(current_id=current_id)
             
         # Write name.txt and id.txt
         (settings_folder / "account_name.txt").write_text(name_input, encoding="utf-8")
         (settings_folder / "user_steam_id.txt").write_text(user_id_input, encoding="utf-8")
         
-        console.print(f"Setup complete for Goldberg in {settings_folder}")
+        console.print(f"Setup complete for Goldberg Old in {settings_folder}")
         pause(clear=True)
         # Mark config complete
         mark_done(CRACK_TYPES.Goldberg)
 
-    # Get user Roaming folder
     settings_folder = ROAMING / "Goldberg SteamEmu Saves" / "settings"
     settings_folder.mkdir(parents=True, exist_ok=True)
     settings_name_path = settings_folder / name_file
@@ -241,3 +265,23 @@ def goldberg_old_setup():
         modify_data(account_name, id_content)
     
     clear_screen()
+
+def prompt_name(current_name: str):
+    name_input = inquirer.text(message="Enter your in-game name:", 
+                                default=current_name,
+                                instruction="This is what you'll be seen as in-game",
+                                validate= lambda result: len(result) > 0
+                                ).execute()
+    return name_input
+
+def prompt_steam_id(current_id: str):
+    console.print("A web page will open for you to find your Steam ID")
+    sleep(2)
+    webbrowser.open(f"https://steamid.xyz/{current_id}")
+    #while True:
+    user_id_input = inquirer.text(message="Enter your Steam64 ID:", 
+                                    default=current_id,
+                                    long_instruction="Some games' save file are located in this Steam ID.\nBest to stick to one Steam ID or else you'll have to manually migrate your save files when you change midway.\nYou can choose a fake or your own, doesn't matter.",
+                                    validate=validate_steam_id
+                                    ).execute()
+    return user_id_input
