@@ -1,11 +1,33 @@
 # Changelog
 <details open>
 <summary><b>
+v3.2.0
+</b></summary>
+
+- Added
+    - Add debug mode for codes that are not necessary in development environment.
+    - Add new Goldberg version as Goldberg in config.
+    - Add VSCode task to avoid manually typing build.
+    - Add Steam ID Generator in Steam ID prompts.
+
+- Changed
+    - Add ROAMING var to avoid code duplication.
+    - Rename Goldberg to Goldberg Old.
+
+- Fixed
+    - Error handling of symlinking and its config.
+    - Allow creating parents when link path doesn't exist.
+    - (Y/N) instructions in prompts are not shown.
+
+</details>
+
+<details>
+<summary><b>
 v3.1.0
 </b></summary>
 
 - Added
-    - Dynamic config based Cymbolic Linking to avoid data wipes during updates for games with player data in game folder.
+    - Dynamic config based Symbolic Linking to avoid data wipes during updates for games with player data in game folder.
 
     - Add more error handling.
 - Changed
