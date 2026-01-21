@@ -32,7 +32,7 @@ def move_source_and_link_dir(paths: list[setup_dict_literal], exist_ok: bool = F
         else:
             if not source_exists:
                 if type == "Directory":
-                    source.mkdir()
+                    source.mkdir(parents=True)
                 else:
                     source.touch()
             shutil.move(source, destination)
