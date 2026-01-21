@@ -278,10 +278,21 @@ def prompt_steam_id(current_id: str):
     console.print("A web page will open for you to find your Steam ID")
     sleep(2)
     webbrowser.open(f"https://steamid.xyz/{current_id}")
-    #while True:
-    user_id_input = inquirer.text(message="Enter your Steam64 ID:", 
+       
+    l_instruction = f"""\
+{get_l_instruction_suffix(key_action="steam_id")}
+Some games' save file are located in this Steam ID.
+Best to stick to one Steam ID or else you'll have to manually migrate your save files when you change midway.
+You can choose a fake or your own, doesn't matter.
+"""
+
+    prompt = inquirer.text(message="Enter your Steam64 ID:", 
                                     default=current_id,
-                                    long_instruction="Some games' save file are located in this Steam ID.\nBest to stick to one Steam ID or else you'll have to manually migrate your save files when you change midway.\nYou can choose a fake or your own, doesn't matter.",
+                                    long_instruction=l_instruction,
                                     validate=validate_steam_id
-                                    ).execute()
+                                    )
+    get_keybindings(prompt=prompt, key_action="steam_id")
+    user_id_input = prompt.execute()
+    
+    
     return user_id_input
