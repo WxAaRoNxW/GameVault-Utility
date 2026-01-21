@@ -1,4 +1,6 @@
 from dataclasses import dataclass
+import os
+from pathlib import Path
 import shutil
 import sys
 from configobj import ConfigObj
@@ -29,6 +31,11 @@ GAMEVAULT_EXEC_CONFIG   = BASE_PATH.parent / "gamevault-exec"               # pa
 ORIGINAL_FILES_PATH     = BASE_PATH / gvu_config_dir / "original files"
 CRACK_FILES_PATH        = BASE_PATH / gvu_config_dir / "crack files"
 GLOBAL_CONFIG           = BASE_PATH.parent.parent / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
+# Get user Roaming folder
+if os.name == "nt":
+    ROAMING = Path(os.getenv("APPDATA"))
+else:
+    ROAMING = Path.home() / ".config"
 
 def validate_paths():
     global config

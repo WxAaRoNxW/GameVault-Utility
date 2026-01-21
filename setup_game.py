@@ -6,6 +6,7 @@ import webbrowser
 
 from configobj import ConfigObj
 from config_loader import Config, get_config_value, parse_tuple_list_string, set_config_values, gv_name
+from config_loader import ROAMING, Config, get_config_value, parse_tuple_list_string, set_config_values, gv_name
 from global_config import GlobalConfig, get_global_config_value, set_global_config_value
 from prompt_key_actions import get_l_instruction_suffix, get_keybindings
 from prompt_validator import validate_prompt, validate_steam_id
@@ -142,12 +143,7 @@ def goldberg_setup():
         mark_done(CRACK_TYPES.Goldberg)
 
     # Get user Roaming folder
-    if os.name == "nt":
-        roaming = Path(os.getenv("APPDATA"))
-    else:
-        roaming = Path.home() / ".config"
-    
-    settings_folder = roaming / "Goldberg SteamEmu Saves" / "settings"
+    settings_folder = ROAMING / "Goldberg SteamEmu Saves" / "settings"
     settings_folder.mkdir(parents=True, exist_ok=True)
     settings_name_path = settings_folder / name_file
     settings_id_path = settings_folder / steam_id_file
