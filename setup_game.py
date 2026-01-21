@@ -85,7 +85,7 @@ def one_time_setup():
         case CRACK_TYPES.OnlineFix:
             onlinefix_setup()
         case CRACK_TYPES.Goldberg:
-            goldberg_setup()
+            goldberg_old_setup()
         case CRACK_TYPES.RUNE:
             rune_setup()
         case CRACK_TYPES.Other:
@@ -111,8 +111,71 @@ def onlinefix_setup():
     pause()
     mark_done(CRACK_TYPES.OnlineFix)
 
+setup_keys_literal: TypeAlias = Literal['Path', 'Message', 'Instructions', 'Long Instructions', 'Default', 'Key Action', 'Validator', 'Section', 'Key']
+setup_dict_literal: TypeAlias = dict[setup_keys_literal, str]
+def parse_setup_options() -> list[setup_dict_literal]:
+    file_edits = get_config_value(Config.Setup.str(), Config.Setup.FileEdits, "").strip()
+    prompt_dicts_list = parse_tuple_list_string(file_edits, 9, ("Path", "Message", 'Instructions', 'Long Instructions', 'Default', 'Key Action', 'Validator', "Section", "Key"))
+
+    return prompt_dicts_list
+
+def other_setup():
+    try:
+        prompt_dicts_list = parse_setup_options()
+    except:
+        raise Exception("Prompt empty even though setup exists.")
+
+    for prompt_dict in prompt_dicts_list:
+        config_other = ConfigObj(str(Path(os.path.expandvars(prompt_dict["Path"])).resolve()))
+        
+        default_value = config_other[prompt_dict["Section"]].get(
+            prompt_dict["Key"], 
+            "" if prompt_dict["Default"] == "None" else prompt_dict["Default"]
+            )
+        # if config_other[prompt_dict["Section"]].get(prompt_dict["Key"], ""):
+        #     default_value = config_other[prompt_dict["Section"]].get(prompt_dict["Key"], "")
+        # else:
+        #     default_value = "" if prompt_dict["Default"] == "None" else prompt_dict["Default"]
+
+        l_instruction = "" if prompt_dict["Long Instructions"] == "None" else prompt_dict["Long Instructions"]
+        l_instruction = "\n".join([get_l_instruction_suffix(prompt_dict["Key Action"]), l_instruction]).strip()
+        prompt = inquirer.text(message=prompt_dict["Message"],
+                                      default=default_value,
+                                      instruction= "" if prompt_dict["Instructions"] == "None" else prompt_dict["Instructions"],
+                                      long_instruction=l_instruction,
+                                      validate=validate_prompt(prompt_dict["Validator"])
+                                      )
+        get_keybindings(prompt=prompt, key_action=prompt_dict["Key Action"])
+        user_id_input = prompt.execute()
+
+        config_other[prompt_dict["Section"]][prompt_dict["Key"]] = user_id_input
+        config_other.write()
+        #Path(os.path.expandvars(prompt_dict["Path"])).resolve().write_text(user_id_input, encoding="utf-8")
+    console.print(f"Setup complete!")
+    pause(clear=True)
+    mark_done(CRACK_TYPES.Other)
+
+# RUNE is a per game modification
+def rune_setup():
+    # check game version
+
+    # find steam_emu.ini in _crack
+
+    # edit username
+
+    # edit id
+
+    # modify cracked folder with config parser
+
+    # copy to game if version choice is pirated
+
+    # mark_done()
+    console.print("Unimplemented")
+    clear_screen()
+    return
+
 # Goldberg setup
-def goldberg_setup():
+def goldberg_old_setup():
     name_file = "account_name.txt"
     steam_id_file = "user_steam_id.txt"
     def modify_data(current_name, current_id):
@@ -178,66 +241,3 @@ def goldberg_setup():
         modify_data(account_name, id_content)
     
     clear_screen()
-
-setup_keys_literal: TypeAlias = Literal['Path', 'Message', 'Instructions', 'Long Instructions', 'Default', 'Key Action', 'Validator', 'Section', 'Key']
-setup_dict_literal: TypeAlias = dict[setup_keys_literal, str]
-def parse_setup_options() -> list[setup_dict_literal]:
-    file_edits = get_config_value(Config.Setup.str(), Config.Setup.FileEdits, "").strip()
-    prompt_dicts_list = parse_tuple_list_string(file_edits, 9, ("Path", "Message", 'Instructions', 'Long Instructions', 'Default', 'Key Action', 'Validator', "Section", "Key"))
-
-    return prompt_dicts_list
-
-def other_setup():
-    try:
-        prompt_dicts_list = parse_setup_options()
-    except:
-        raise Exception("Prompt empty even though setup exists.")
-
-    for prompt_dict in prompt_dicts_list:
-        config_other = ConfigObj(str(Path(os.path.expandvars(prompt_dict["Path"])).resolve()))
-        
-        default_value = config_other[prompt_dict["Section"]].get(
-            prompt_dict["Key"], 
-            "" if prompt_dict["Default"] == "None" else prompt_dict["Default"]
-            )
-        # if config_other[prompt_dict["Section"]].get(prompt_dict["Key"], ""):
-        #     default_value = config_other[prompt_dict["Section"]].get(prompt_dict["Key"], "")
-        # else:
-        #     default_value = "" if prompt_dict["Default"] == "None" else prompt_dict["Default"]
-
-        l_instruction = "" if prompt_dict["Long Instructions"] == "None" else prompt_dict["Long Instructions"]
-        l_instruction = "\n".join([get_l_instruction_suffix(prompt_dict["Key Action"]), l_instruction]).strip()
-        prompt = inquirer.text(message=prompt_dict["Message"],
-                                      default=default_value,
-                                      instruction= "" if prompt_dict["Instructions"] == "None" else prompt_dict["Instructions"],
-                                      long_instruction=l_instruction,
-                                      validate=validate_prompt(prompt_dict["Validator"])
-                                      )
-        get_keybindings(prompt=prompt, key_action=prompt_dict["Key Action"])
-        user_id_input = prompt.execute()
-
-        config_other[prompt_dict["Section"]][prompt_dict["Key"]] = user_id_input
-        config_other.write()
-        #Path(os.path.expandvars(prompt_dict["Path"])).resolve().write_text(user_id_input, encoding="utf-8")
-    console.print(f"Setup complete!")
-    pause(clear=True)
-    mark_done(CRACK_TYPES.Other)
-
-# RUNE is a per game modification
-def rune_setup():
-    # check game version
-
-    # find steam_emu.ini in _crack
-
-    # edit username
-
-    # edit id
-
-    # modify cracked folder with config parser
-
-    # copy to game if version choice is pirated
-
-    # mark_done()
-    console.print("Unimplemented")
-    clear_screen()
-    return
