@@ -76,7 +76,7 @@ def one_time_setup():
     # Get crack type
     setup_type = CRACK_TYPES[get_config_value(Config.Crack.str(), Config.Crack.Type, "N/A")]
     pathlink_string = get_config_value(Config.Setup.str(), Config.Setup.PathMoveLinking, '')
-    if pathlink_string != '':
+    if pathlink_string.strip() != '':
         move_source_and_link_dir(pathlink_string, exist_ok=True)
 
     # Run crack type's method using switch case

@@ -27,7 +27,8 @@ def move_source_and_link_dir(paths: list[setup_dict_literal], exist_ok: bool = F
         source_exists = source.exists()
         destination_exists = destination.exists()
         if destination_exists:
-            if source_exists:
+            if source_exists and not source.is_symlink():
+                # to do: make an interactive prompt to show both folders and choose what to do with both
                 raise FileExistsError(f"Path exists on both paths: {source} and {destination}")
         else:
             if not source_exists:
@@ -46,12 +47,9 @@ def move_source_and_link_dir(paths: list[setup_dict_literal], exist_ok: bool = F
         if source.is_symlink():
             raise Exception(f"Source is a symlink, {source}")
         if link.exists():
-            raise FileExistsError(f"Link path is an actual file: {link}")
-        if link.is_symlink():
-            if exist_ok:
-                return
-            else:
-                raise FileExistsError(f"{link}")
+            if link.is_symlink():
+                if not exist_ok: raise FileExistsError(f"{link}")
+            else: raise FileExistsError(f"Link path is an actual file: {link}")
         
         source_is_dir = type == "Directory"
         Path(link).symlink_to(source, source_is_dir)
