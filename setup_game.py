@@ -256,7 +256,7 @@ def goldberg_old_setup():
                                        instruction="Not proceeding will complete the setup. (Y/n)",
                                        default=True).execute()
             if not proceed: 
-                mark_done(CRACK_TYPES.Goldberg)
+                mark_done(CRACK_TYPES.Goldberg_Old)
                 return
             modify_data(account_name, id_content)
 
