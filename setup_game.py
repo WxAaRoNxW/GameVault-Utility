@@ -228,7 +228,7 @@ def goldberg_old_setup():
         console.print(f"Setup complete for Goldberg Old in {settings_folder}")
         pause(clear=True)
         # Mark config complete
-        mark_done(CRACK_TYPES.Goldberg)
+        mark_done(CRACK_TYPES.Goldberg_Old)
 
     settings_folder = ROAMING / "Goldberg SteamEmu Saves" / "settings"
     settings_folder.mkdir(parents=True, exist_ok=True)
