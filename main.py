@@ -18,7 +18,7 @@ from InquirerPy.utils import color_print
 # ----------------------------
 
 # 1. Start game
-def start_game():
+def start_game(close_console: bool = False):
     # reset Don't Ask Again
     dont_ask_again = get_config_value(Config.Default.str(), Config.Default.DontAskAgain, "False").lower() == "true"
     if (dont_ask_again):
@@ -30,7 +30,13 @@ def start_game():
 
     if exe_path.exists() and exe_path.is_file():
         console.print(f"Starting game...")
+        
+        if close_console:
         subprocess.Popen(exe_path)
+        else:
+            # Hide console window
+            ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
+            subprocess.run(exe_path) # wait until process closes before continuing
         sys.exit(0)
     else:
         console.print("[red]Executable path not found in external config.")
@@ -43,7 +49,7 @@ def start_game_no_prompt():
     
     console.print(f"Updated gamevault-exec file to skip prompt next time.")
     sleep(2)
-    start_game()
+    start_game(close_console=True)
 
 # 4. Change version (delete files in __folder1, merge __folder2 into base)
 def prompt_change_version():
@@ -104,7 +110,7 @@ def setup_choices():
 
     choices: list = []
     if setup_done:
-        choices.append(Choice(value=MenuChoices.Start,         name="Start game"))
+        choices.append(Choice(value=MenuChoices.Start,         name="Start game (This window will remain open to track playtime!)"))
         choices.append(Choice(value=MenuChoices.StartAlways,   name="Start game and don't ask again"))
         if has_setup:
             choices.append(Choice(value=MenuChoices.Setup,     name=get_setup_choice_str(setup_type, setup_done)))
@@ -145,7 +151,7 @@ def main():
     
     match choice:
         case MenuChoices.Start:
-            start_game()
+            start_game(close_console=False)
         case MenuChoices.StartAlways:
             start_game_no_prompt()
         case MenuChoices.Setup:
