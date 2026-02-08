@@ -47,8 +47,8 @@ def start_game_no_prompt():
     # Update executable of gamevault-exec
     set_executable(str(BASE_PATH / get_config_value(Config.Default.str(), Config.Default.Executable)))
     
-    console.print(f"Updated gamevault-exec file to skip prompt next time.")
-    sleep(2)
+    console.print(f"Updated gamevault-exec file to skip prompt next time. You can always open this console again through the game's folder, GVU.exe.")
+    sleep(3)
     start_game(close_console=True)
 
 # 4. Change version (delete files in __folder1, merge __folder2 into base)
