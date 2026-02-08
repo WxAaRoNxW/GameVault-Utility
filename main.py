@@ -112,8 +112,8 @@ def setup_choices():
 
     choices: list = []
     if setup_done:
-        choices.append(Choice(value=MenuChoices.Start,         name="Start game (This window will remain open to track playtime!)"))
         choices.append(Choice(value=MenuChoices.StartAlways,   name="Start game and don't ask again"))
+        choices.append(Choice(value=MenuChoices.Start,         name="Start game (This window will remain open to track playtime!)"))
         if has_setup:
             choices.append(Choice(value=MenuChoices.Setup,     name=get_setup_choice_str(setup_type, setup_done)))
         if has_original:
