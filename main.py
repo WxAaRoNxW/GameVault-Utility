@@ -32,7 +32,7 @@ def start_game(close_console: bool = False):
         console.print(f"Starting game...")
         
         if close_console:
-        subprocess.Popen(exe_path)
+            subprocess.Popen(exe_path)
         else:
             # Hide console window
             ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
@@ -88,6 +88,8 @@ def get_setup_choice_str(setup_type: str, setup_done: bool):
             choice_string = f"Per-Game Setup for '{setup_type}'"
         case CRACK_TYPES.Other:
             choice_string = f"Per-Game Setup"
+        case CRACK_TYPES.Goldberg_Old:
+            choice_string = f"One-time global setup for '{setup_type}'"
         case _:
             choice_string = "Option error, Contact GameVault Admin!"
             is_error = True
