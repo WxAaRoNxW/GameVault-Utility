@@ -1,13 +1,23 @@
 # Changelog
 <details open>
 <summary><b>
+v3.2.2
+</b></summary>
+
+- Fixed
+    - Goldberg_Old not completing its setup when proceeding with setup. (last patch was saying [n]o to modifying existing config)
+
+</details>
+
+<details>
+<summary><b>
 v3.2.1
 </b></summary>
 
 - Changed
     - Console now hides until game closes, which it will close soon after.
     - Add more info to start options.
-    
+
 - Fixed
     - GameVault now tracks game time even if users do not run with "Start Game and don't ask again"
     - Goldberg_Old option error in setup.
