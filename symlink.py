@@ -20,8 +20,8 @@ def move_source_and_link_dir(paths: list[setup_dict_literal], exist_ok: bool = F
         move_source_and_link_dir(target_source_dict_list, exist_ok)
         return
     for pair in paths:
-        source      = Path(os.path.expandvars(pair['Target'])).absolute()
-        destination = Path(os.path.expandvars(pair['Destination'])).absolute()
+        source      = Path(os.path.expandvars(format_path(pair['Target']))).absolute()
+        destination = Path(os.path.expandvars(format_path(pair['Destination']))).absolute()
         type = pair['Type']
         # Move
         source_exists = source.exists()
@@ -58,4 +58,10 @@ def move_source_and_link_dir(paths: list[setup_dict_literal], exist_ok: bool = F
         if DEBUG: return
         
         Path(link).symlink_to(source, source_is_dir)
-        
+
+def format_path(path: str):
+    keywords = {
+        "game_name": Path.cwd().parent.name # cwd is "File" GameVault games have Files inside the game name, so we need the parent instead
+    }
+    formatted_path = path.format(**keywords)
+    return formatted_path
