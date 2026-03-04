@@ -8,6 +8,7 @@ from config_loader import BASE_PATH, DEBUG, GAMEVAULT_EXEC_CONFIG, Config, get_c
 from util import clear_screen, get_exe_path, sleep
 from version_changer import change_version
 from gamevault_exec_handler import set_executable
+from symlink import move_source_and_link_dir
 from logger import console
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
@@ -125,10 +126,22 @@ def setup_choices():
 
     return choices
 
+def setup_links():
+    setup_link_done = get_config_value(Config.Setup.str(), Config.Setup.PathMoveLinkingComplete, "False").lower() == "true"
+
+    if setup_link_done: return
+
+    pathlink_string = get_config_value(Config.Setup.str(), Config.Setup.PathMoveLinking, '')
+    if pathlink_string.strip() != '':
+        move_source_and_link_dir(pathlink_string, exist_ok=True)
+
+    set_config_values(Config.Setup.str(), Config.Setup.PathMoveLinkingComplete, "True")
 # ----------------------------
 # Main prompt loop
 # ----------------------------
 def main():
+    setup_links()
+
     color_print(formatted_text=[
                     ("class:gg", "Game"),
                     ("", "Vault"),

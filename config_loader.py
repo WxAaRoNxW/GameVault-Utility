@@ -79,6 +79,7 @@ class Config:
     class Setup:
         FileEdits: str = "FileEdits"
         PathMoveLinking: str = "PathMoveLinking"
+        PathMoveLinkingComplete: str = "PathMoveLinkingComplete"
         def str():
             return "SETUP"
 

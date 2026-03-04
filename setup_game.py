@@ -9,7 +9,6 @@ from config_loader import ROAMING, Config, get_config_value, parse_tuple_list_st
 from global_config import GlobalConfig, get_global_config_value, set_global_config_value
 from prompt_key_actions import get_l_instruction_suffix, get_keybindings
 from prompt_validator import validate_prompt, validate_steam_id
-from symlink import move_source_and_link_dir
 from util import clear_screen, pause, sleep
 from logger import console
 from InquirerPy import inquirer
@@ -62,9 +61,6 @@ def is_complete() -> bool:
 def one_time_setup():
     # Get crack type
     setup_type = CRACK_TYPES[get_config_value(Config.Crack.str(), Config.Crack.Type, "N/A")]
-    pathlink_string = get_config_value(Config.Setup.str(), Config.Setup.PathMoveLinking, '')
-    if pathlink_string.strip() != '':
-        move_source_and_link_dir(pathlink_string, exist_ok=True)
 
     # Run crack type's method using switch case
     match setup_type:
