@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import shutil
 from typing import Literal, TypeAlias
-from config_loader import DEBUG, parse_tuple_list_string
+from config_loader import DEBUG, GAMEVAULT_GAME_PATH, parse_tuple_list_string
 
 
 setup_keys_literal: TypeAlias = Literal['Target', 'Destination', 'Type']
@@ -61,7 +61,7 @@ def move_source_and_link_dir(paths: list[setup_dict_literal], exist_ok: bool = F
 
 def format_path(path: str):
     keywords = {
-        "game_name": Path.cwd().parent.name # cwd is "File" GameVault games have Files inside the game name, so we need the parent instead
+        "game_name": GAMEVAULT_GAME_PATH.name
     }
     formatted_path = path.format(**keywords)
     return formatted_path
