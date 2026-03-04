@@ -1,6 +1,26 @@
 # Changelog
 <details open>
 <summary><b>
+v3.3.0
+</b></summary>
+
+- Added
+    - Add keyword formatting for symlinking paths.
+        - {game_name} - Game Folder name. ex. "(1)Random Game"
+        - {game_persistent_data_path} - Folder path where persistent data of games are transferred to by GVU.
+
+- Changed
+    - Change global config location to GameVault root.
+    - Separate symlink setup from game setup. (added new config variable)
+    - Refactor config paths.
+
+- Fixed
+    - Error checking for symlink config.
+
+</details>
+
+<details>
+<summary><b>
 v3.2.2
 </b></summary>
 
