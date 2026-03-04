@@ -22,17 +22,27 @@ custom_script_filename = "gvu_config"
 custom_script_copy_append = "_copy_DO_NOT_DELETE"
 
 # ----------------------------
+# Base Paths
+# ----------------------------
+BASE_PATH                   = Path.cwd()
+GAMEVAULT_GAME_PATH         = BASE_PATH.parent           # ex. (1)Random Game
+GAMEVAULT_ROOT_PATH         = BASE_PATH.parent.parent.parent # ex. GameVault -> Installations | Downloads
+PERSISTENT_DATA_PATH        = GAMEVAULT_ROOT_PATH / "Persistent Data"
+
+GAME_NAME = GAMEVAULT_GAME_PATH.name
+PERSISTENT_DATA_GAME_PATH   = PERSISTENT_DATA_PATH / GAME_NAME
+
+# ----------------------------
 # Paths
 # ----------------------------
-BASE_PATH               = Path.cwd()
-GAMEVAULT_GAME_PATH     = BASE_PATH.parent           # ex. (1)Random Game
-GAMEVAULT_ROOT_PATH     = BASE_PATH.parent.parent.parent # ex. GameVault -> Installations | Downloads
-CONFIG_PATH             = BASE_PATH / gvu_config_dir / f"{custom_script_filename}.ini"                    # external config
-CONFIG_COPY_PATH        = BASE_PATH / gvu_config_dir / f"{custom_script_filename}{custom_script_copy_append}.ini" # external config copy
-GAMEVAULT_EXEC_CONFIG   = GAMEVAULT_GAME_PATH / "gamevault-exec"               # parent path's config file
-ORIGINAL_FILES_PATH     = BASE_PATH / gvu_config_dir / "original files"
-CRACK_FILES_PATH        = BASE_PATH / gvu_config_dir / "crack files"
-GLOBAL_CONFIG           = GAMEVAULT_ROOT_PATH / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
+
+CONFIG_PATH                 = BASE_PATH / gvu_config_dir / f"{custom_script_filename}.ini"                    # external config
+CONFIG_COPY_PATH            = BASE_PATH / gvu_config_dir / f"{custom_script_filename}{custom_script_copy_append}.ini" # external config copy
+GAMEVAULT_EXEC_CONFIG       = GAMEVAULT_GAME_PATH / "gamevault-exec"               # parent path's config file
+ORIGINAL_FILES_PATH         = BASE_PATH / gvu_config_dir / "original files"
+CRACK_FILES_PATH            = BASE_PATH / gvu_config_dir / "crack files"
+GLOBAL_CONFIG               = GAMEVAULT_ROOT_PATH / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
+
 
 # Get user Roaming folder
 if os.name == "nt":
