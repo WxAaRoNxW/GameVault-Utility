@@ -30,7 +30,7 @@ CONFIG_COPY_PATH        = BASE_PATH / gvu_config_dir / f"{custom_script_filename
 GAMEVAULT_EXEC_CONFIG   = BASE_PATH.parent / "gamevault-exec"               # parent path's config file
 ORIGINAL_FILES_PATH     = BASE_PATH / gvu_config_dir / "original files"
 CRACK_FILES_PATH        = BASE_PATH / gvu_config_dir / "crack files"
-GLOBAL_CONFIG           = BASE_PATH.parent.parent / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
+GLOBAL_CONFIG           = BASE_PATH.parent.parent.parent / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
 # Get user Roaming folder
 if os.name == "nt":
     ROAMING = Path(os.getenv("APPDATA"))
