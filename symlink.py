@@ -34,8 +34,11 @@ def move_source_and_link_dir(paths: list[setup_dict_literal], exist_ok: bool = F
             if not source_exists:
                 if type == "Directory":
                     source.mkdir(parents=True)
-                else:
+                elif type == "File":
                     source.touch()
+                else:
+                    raise SyntaxError(f"Incorrect type: {type}, must be 'Directory' or 'File'")
+
             shutil.move(source, destination)
 
         # change variable names for readability
