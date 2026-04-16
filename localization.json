@@ -4,7 +4,7 @@
             "requesting_admin": "Requesting admin privileges...",
             
             "config_missing": "'{custom_script_filename}{custom_script_copy_append}.ini' is missing, but still functional, ask GameVault Admin for repair file",
-            "invalid_yes_no": "Please enter y or n.",
+            "invalid_yes_no": "Please enter y or n."
         },
         "main_menu": {
             "prompt_option": {
@@ -23,7 +23,7 @@
         "start": {
             "starting_game": "Starting game...",
             "updated_exec_file": "Updated gamevault-exec file to skip prompt next time. You can always open this console again through the game's folder, GVU.exe.",
-            "exec_path_not_found": "[red]Executable path not found in external config.",
+            "exec_path_not_found": "[red]Executable path not found in external config."
             
         },
         "setup": {
@@ -64,7 +64,7 @@
                 "old_existing_config": "[yellow]You have an existing configuration from past pirated games that uses Goldberg.",
                 "old_setup_complete": "Setup complete for Goldberg Old in {settings_folder}",
                 "current_username": "Current username is: {account_name}",
-                "current_steam_id": "Current steam id is: {id_content}",
+                "current_steam_id": "Current steam id is: {id_content}"
             },
             "other": {
                 "l_instruction": {
@@ -79,7 +79,7 @@
             "back_option": "Back",
             "message": "Change version",
             "current_version": "Current: {version}",
-            "invalid_version_choice": "Invalid choice, cancelling version update.",
+            "invalid_version_choice": "Invalid choice, cancelling version update."
         },
         "no_gamevault": {
             "prompts": {
@@ -104,7 +104,7 @@
             "link_already_exists": "{link}",
             "link_is_actual_file": "Link path is an actual file: {link}",
 
-            "clear_screen_error": "Error clearing screen: {error}",
+            "clear_screen_error": "Error clearing screen: {error}"
         }
     }
 }
