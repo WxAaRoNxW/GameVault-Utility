@@ -17,7 +17,7 @@
             "option_error": "Option error, Contact GameVault Admin!",
             
             "start_always": "Start game and don't ask again",
-            "start": "Start game (This window will remain open to track playtime!)",
+            "start": "Start game",
             "exit": "Exit"
         },
         "start": {

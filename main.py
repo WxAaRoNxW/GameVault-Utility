@@ -19,7 +19,7 @@ from InquirerPy.utils import color_print
 # ----------------------------
 
 # 1. Start game
-def start_game(close_console: bool = False):
+def start_game():
     # reset Don't Ask Again
     dont_ask_again = get_config_value(Config.Default.str(), Config.Default.DontAskAgain, "False").lower() == "true"
     if (dont_ask_again):
@@ -32,12 +32,7 @@ def start_game(close_console: bool = False):
     if exe_path.exists() and exe_path.is_file():
         console.print(lang["start.starting_game"])
         
-        if close_console:
-            subprocess.Popen(exe_path)
-        else:
-            # Hide console window
-            ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
-            subprocess.run(exe_path) # wait until process closes before continuing
+        subprocess.Popen(exe_path)
         sys.exit(0)
     else:
         console.print(lang["start.exec_path_not_found"])
@@ -50,7 +45,7 @@ def start_game_no_prompt():
     
     console.print(lang["start.updated_exec_file"])
     sleep(3)
-    start_game(close_console=True)
+    start_game()
 
 # 4. Change version (delete files in __folder1, merge __folder2 into base)
 def prompt_change_version():
@@ -166,7 +161,7 @@ def main():
     
     match choice:
         case MenuChoices.Start:
-            start_game(close_console=False)
+            start_game()
         case MenuChoices.StartAlways:
             start_game_no_prompt()
         case MenuChoices.Setup:
