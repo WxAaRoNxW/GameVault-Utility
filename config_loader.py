@@ -8,13 +8,11 @@ from InquirerPy import inquirer
 
 from util import pause
 from logger import console
-from lang import Lang
+from lang import lang
 if getattr(sys, 'frozen', False):
     DEBUG = False
 else:
     DEBUG = True
-
-lang = Lang("localization.json", "en")
 
 script_version = "v3.3.0"
 

@@ -5,7 +5,8 @@ from typing import Literal, TypeAlias
 import webbrowser
 
 from configobj import ConfigObj
-from config_loader import ROAMING, Config, get_config_value, parse_tuple_list_string, set_config_values, gv_name, lang
+from config_loader import ROAMING, Config, get_config_value, parse_tuple_list_string, set_config_values, gv_name
+from lang import lang
 from global_config import GlobalConfig, get_global_config_value, set_global_config_value
 from prompt_key_actions import get_l_instruction_suffix, get_keybindings
 from prompt_validator import validate_prompt, validate_steam_id

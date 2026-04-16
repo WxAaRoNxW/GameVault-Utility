@@ -4,7 +4,8 @@ from pathlib import Path
 import sys
 import subprocess
 from setup_game import CRACK_TYPES, is_complete, one_time_setup
-from config_loader import BASE_PATH, DEBUG, GAMEVAULT_EXEC_CONFIG, no_gamevault_mode, Config, get_config_value, set_config_values, script_version, validate_paths, lang
+from config_loader import BASE_PATH, DEBUG, GAMEVAULT_EXEC_CONFIG, no_gamevault_mode, Config, get_config_value, set_config_values, script_version, validate_paths
+from lang import lang
 from util import clear_screen, get_exe_path, sleep
 from version_changer import change_version
 from gamevault_exec_handler import set_executable
@@ -164,7 +165,7 @@ def main():
         message=lang["main_menu.prompt_option.message"],
         choices=choices,
         instruction=lang["main_menu.prompt_option.instruction"],
-        default="Original",
+        default=lang["change_version.original"],
     ).execute()
     
     match choice:

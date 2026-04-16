@@ -1,7 +1,7 @@
 import random
 import uuid
 from InquirerPy.prompts.input import InputPrompt
-from config_loader import lang
+from lang import lang
 
 def get_keybindings(prompt: InputPrompt, key_action: str):
     match key_action:

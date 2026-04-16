@@ -4,7 +4,7 @@ import sys
 import time
 import uuid
 from logger import console
-from config_loader import lang
+from lang import lang
 
 def get_exe_path() -> Path:
     if getattr(sys, 'frozen', False):

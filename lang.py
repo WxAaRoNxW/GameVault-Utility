@@ -23,3 +23,5 @@ class Lang:
         if isinstance(value, str) and "{" in value:
             return lambda **kwargs: value.format(**kwargs)
         return value
+
+lang = Lang("localization.json", "en")

@@ -1,7 +1,8 @@
 from pathlib import Path
 import shutil
 from typing import Literal
-from config_loader import BASE_PATH, ORIGINAL_FILES_PATH, CRACK_FILES_PATH, Config, set_config_values, lang
+from config_loader import BASE_PATH, ORIGINAL_FILES_PATH, CRACK_FILES_PATH, Config, set_config_values
+from lang import lang
 from util import pause
 from logger import console
 
