@@ -4,6 +4,7 @@ from pathlib import Path
 import shutil
 import sys
 from configobj import ConfigObj
+from InquirerPy import inquirer
 
 from util import pause
 from logger import console
@@ -22,6 +23,11 @@ gvu_config_dir = "_GVU/GVU config"
 custom_script_name = "GVU"
 custom_script_filename = "gvu_config"
 custom_script_copy_append = "_copy_DO_NOT_DELETE"
+
+# ----------------------------
+# Special
+# ----------------------------
+no_gamevault_mode = False   # For disregarding GameVault related configs
 
 # ----------------------------
 # Base Paths
@@ -45,7 +51,6 @@ ORIGINAL_FILES_PATH         = BASE_PATH / gvu_config_dir / "original files"
 CRACK_FILES_PATH            = BASE_PATH / gvu_config_dir / "crack files"
 GLOBAL_CONFIG               = GAMEVAULT_ROOT_PATH / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
 
-
 # Get user Roaming folder
 if os.name == "nt":
     ROAMING = Path(os.getenv("APPDATA"))
@@ -65,7 +70,14 @@ def validate_paths():
 
     config = ConfigObj(str(CONFIG_PATH))
 
-    if not GAMEVAULT_EXEC_CONFIG.is_file(): raise FileNotFoundError(lang["errors.gamevault_exec_missing"](custom_script_name=custom_script_name))
+    if not GAMEVAULT_EXEC_CONFIG.is_file(): 
+        proceed = inquirer.confirm(message=lang["no_gamevault.prompts.not_in_gamevault.message"],
+                                   instruction=lang["no_gamevault.prompts.not_in_gamevault.instruction"],
+                                   long_instruction=lang["no_gamevault.prompts.not_in_gamevault.l_instruction"],
+                            default=True).execute()
+        if not proceed:
+            raise FileNotFoundError(lang["errors.gamevault_exec_missing"](custom_script_name=custom_script_name))
+        no_gamevault_mode = True
     has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
     if has_original and not ORIGINAL_FILES_PATH.is_dir(): raise FileNotFoundError(lang["errors.original_files_missing"](custom_script_name=custom_script_name))
     if has_original and not CRACK_FILES_PATH.is_dir(): raise FileNotFoundError(lang["errors.crack_files_missing"](custom_script_name=custom_script_name))

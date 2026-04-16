@@ -81,6 +81,15 @@
             "current_version": "Current: {version}",
             "invalid_version_choice": "Invalid choice, cancelling version update.",
         },
+        "no_gamevault": {
+            "prompts": {
+                "not_in_gamevault": {
+                    "message": "GVU is not located in a GameVault folder, are you trying to use it to change this game's version, Original <-> Pirated?",
+                    "instruction": "Type 'Y' or 'n' to choose, default is 'y' if you enter nothing. (Y/n)",
+                    "l_instruction": "Note:\nThis may not work correctly if GVU came from an outdated version of the game.\nThis will definitely not work if GVU came from a different game."
+                }
+            }
+        },
         "errors": {
             "config_missing_backup": "'{custom_script_filename}{custom_script_copy_append}.ini' is missing, ask GameVault Admin for repair file",
             "gamevault_exec_missing": "gamevault-exec missing, is the {custom_script_name} script in the right path?",

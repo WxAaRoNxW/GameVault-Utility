@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 import subprocess
 from setup_game import CRACK_TYPES, is_complete, one_time_setup
-from config_loader import BASE_PATH, DEBUG, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version, validate_paths, lang
+from config_loader import BASE_PATH, DEBUG, GAMEVAULT_EXEC_CONFIG, no_gamevault_mode, Config, get_config_value, set_config_values, script_version, validate_paths, lang
 from util import clear_screen, get_exe_path, sleep
 from version_changer import change_version
 from gamevault_exec_handler import set_executable
@@ -108,7 +108,7 @@ def setup_choices():
 
     choices: list = []
     if setup_done:
-        choices.append(Choice(value=MenuChoices.StartAlways,   name=lang["main_menu.start_always"]))
+        if not no_gamevault_mode: choices.append(Choice(value=MenuChoices.StartAlways,   name=lang["main_menu.start_always"]))
         choices.append(Choice(value=MenuChoices.Start,         name=lang["main_menu.start"]))
         if has_setup:
             choices.append(Choice(value=MenuChoices.Setup,     name=get_setup_choice_str(setup_type, setup_done)))
@@ -122,6 +122,9 @@ def setup_choices():
     return choices
 
 def setup_links():
+    if no_gamevault_mode:
+        return # no gamevault mode is only ever used for instances with original version, so there's no need to symlink files that deletes on gamevault game update.
+     
     setup_link_done = get_config_value(Config.Setup.str(), Config.Setup.PathMoveLinkingComplete, "False").lower() == "true"
 
     if setup_link_done: return
@@ -144,7 +147,7 @@ def main():
 
     color_print(formatted_text=[
                     ("class:gg", "Game"),
-                    ("", "Vault"),
+                    ("", "Manager" if no_gamevault_mode else "Vault"),
                     ("class:yy", " Utility"),
                     ("", " - "),
                     ("class:vv", script_version)
