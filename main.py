@@ -8,7 +8,7 @@ from config_loader import BASE_PATH, DEBUG, GAMEVAULT_EXEC_CONFIG, Config, get_c
 from util import clear_screen, get_exe_path, sleep
 from version_changer import change_version
 from gamevault_exec_handler import set_executable
-from symlink import move_source_and_link_dir
+from symlink import move_source_and_link_dir, parse_move_link_input
 from logger import console
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
@@ -127,8 +127,13 @@ def setup_links():
     if setup_link_done: return
 
     pathlink_string = get_config_value(Config.Setup.str(), Config.Setup.PathMoveLinking, '')
-    if pathlink_string.strip() != '':
-        move_source_and_link_dir(pathlink_string, exist_ok=True)
+    pathlink_config_empty = pathlink_string.strip() == ''
+    if pathlink_config_empty:
+        set_config_values(Config.Setup.str(), Config.Setup.PathMoveLinkingComplete, "True")
+        return
+    
+    target_source_dict_list = parse_move_link_input(pathlink_string)
+    move_source_and_link_dir(target_source_dict_list, exist_ok=True)
 
     set_config_values(Config.Setup.str(), Config.Setup.PathMoveLinkingComplete, "True")
 # ----------------------------

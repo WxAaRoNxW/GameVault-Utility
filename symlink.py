@@ -15,10 +15,6 @@ def parse_move_link_input(content: str) -> list[setup_dict_literal]:
     return target_source_dict_list
 
 def move_source_and_link_dir(paths: list[setup_dict_literal], exist_ok: bool = False):
-    if isinstance(paths, str):
-        target_source_dict_list = parse_move_link_input(paths)
-        move_source_and_link_dir(target_source_dict_list, exist_ok)
-        return
     for pair in paths:
         source      = Path(os.path.expandvars(format_path(pair['Target']))).absolute()
         destination = Path(os.path.expandvars(format_path(pair['Destination']))).absolute()
