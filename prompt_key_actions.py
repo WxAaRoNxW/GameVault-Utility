@@ -1,6 +1,7 @@
 import random
 import uuid
 from InquirerPy.prompts.input import InputPrompt
+from config_loader import lang
 
 def get_keybindings(prompt: InputPrompt, key_action: str):
     match key_action:
@@ -25,14 +26,13 @@ def get_keybindings(prompt: InputPrompt, key_action: str):
 
 
 def get_l_instruction_suffix(key_action: str):
-    instruction_text = ""
     match key_action:
         case "uuid":
-            instruction_text = "Ctrl + R to generate a random UUID"
+            return lang["setup.other.l_instruction.uuid"]
         case "steam_id":
-            instruction_text = "Ctrl + R to generate a random Steam ID"
-    
-    return instruction_text
+            return lang["setup.other.l_instruction.steam_id"]
+        case _:
+            return ""
 
 def generate_steamid64(
     universe=1,

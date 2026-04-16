@@ -4,6 +4,7 @@ import sys
 import time
 import uuid
 from logger import console
+from config_loader import lang
 
 def get_exe_path() -> Path:
     if getattr(sys, 'frozen', False):
@@ -46,7 +47,7 @@ def prompt_yes_no(message: str, default: bool | None = None) -> bool:
         if choice == "" and default is not None:
             return default
 
-        console.print("Please enter y or n.")
+        console.print(lang["messages.invalid_yes_no"])
 
 def pause(clear: bool = False):
     console.print()
@@ -69,7 +70,7 @@ def clear_screen():
         else:
             os.system('clear')  # macOS/Linux clear command
     except Exception as e:
-        console.print(f"Error clearing screen: {e}")
+        console.print(lang["errors.clear_screen_error"](error=str(e)))
 
 def clear_input_buffer():
     try:

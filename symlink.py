@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import shutil
 from typing import Literal, TypeAlias
-from config_loader import DEBUG, GAME_NAME, GAMEVAULT_GAME_PATH, PERSISTENT_DATA_GAME_PATH, parse_tuple_list_string
+from config_loader import DEBUG, GAME_NAME, GAMEVAULT_GAME_PATH, PERSISTENT_DATA_GAME_PATH, parse_tuple_list_string, lang
 
 
 setup_keys_literal: TypeAlias = Literal['Target', 'Destination', 'Type']
@@ -29,7 +29,7 @@ def move_source_and_link_dir(paths: list[setup_dict_literal], exist_ok: bool = F
         if destination_exists:
             if source_exists and not source.is_symlink():
                 # to do: make an interactive prompt to show both folders and choose what to do with both
-                raise FileExistsError(f"Path exists on both paths: {source} and {destination}")
+                raise FileExistsError(lang["errors.path_exists_both"](source=str(source), destination=str(destination)))
         else:
             if not source_exists:
                 if type == "Directory":
@@ -37,7 +37,7 @@ def move_source_and_link_dir(paths: list[setup_dict_literal], exist_ok: bool = F
                 elif type == "File":
                     source.touch()
                 else:
-                    raise SyntaxError(f"Incorrect type: {type}, must be 'Directory' or 'File'")
+                    raise SyntaxError(lang["errors.invalid_link_type"](type=type))
 
             shutil.move(source, destination)
 
@@ -48,11 +48,11 @@ def move_source_and_link_dir(paths: list[setup_dict_literal], exist_ok: bool = F
         # if not source.exists():
         #     raise FileNotFoundError(f"{source}")
         if source.is_symlink():
-            raise Exception(f"Source is a symlink, {source}")
+            raise Exception(lang["errors.source_is_symlink"](source=str(source)))
         if link.exists():
             if link.is_symlink():
-                if not exist_ok: raise FileExistsError(f"{link}")
-            else: raise FileExistsError(f"Link path is an actual file: {link}")
+                if not exist_ok: raise FileExistsError(lang["errors.link_already_exists"](link=str(link)))
+            else: raise FileExistsError(lang["errors.link_is_actual_file"](link=str(link)))
         
         source_is_dir = type == "Directory"
         if DEBUG: return

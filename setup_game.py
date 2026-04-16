@@ -5,7 +5,7 @@ from typing import Literal, TypeAlias
 import webbrowser
 
 from configobj import ConfigObj
-from config_loader import ROAMING, Config, get_config_value, parse_tuple_list_string, set_config_values, gv_name
+from config_loader import ROAMING, Config, get_config_value, parse_tuple_list_string, set_config_values, gv_name, lang
 from global_config import GlobalConfig, get_global_config_value, set_global_config_value
 from prompt_key_actions import get_l_instruction_suffix, get_keybindings
 from prompt_validator import validate_prompt, validate_steam_id
@@ -34,7 +34,7 @@ def mark_done(setup_type: CRACK_TYPES):
         case CRACK_TYPES.NoSetup:
             return
         case _:
-            console.print("Can't identify crack type, contact GameVault admin.")
+            console.print(lang["setup.messages.setup_cant_identify_crack"])
             pause(clear=True)
 
 def is_complete() -> bool:
@@ -75,23 +75,23 @@ def one_time_setup():
         case CRACK_TYPES.Other:
             other_setup()
         case _:
-            console.print("Can't identify crack type, contact GameVault admin.")
+            console.print(lang["messages.cant_identify_crack"])
             pause(clear=True)
 
 def onlinefix_setup():
-    proceed = inquirer.confirm(message="Have you ever added Spacewar to your steam library in the past by installing and removing it?", 
+    proceed = inquirer.confirm(message=lang["setup.onlinefix.prompts.spacewar.message"], 
                                default=False).execute()
     if proceed:
-        console.print("Nothing to do, setup complete.")
+        console.print(lang["setup.onlinefix.nothing_to_do"])
         mark_done(CRACK_TYPES.OnlineFix)
         return
     
-    console.print("Steam will pop-up to ask you to install Spacewar (to add to your library)")
-    console.print("You can immediately cancel/remove as soon as you PRESS INSTALL")
+    console.print(lang["setup.onlinefix.steam_popup"])
+    console.print(lang["setup.onlinefix.cancel_install"])
     sleep(5)
     webbrowser.open("steam://install/480")
-    console.print("If the install menu doesn't show up, make sure you've logged-in or selected an account you'll use on steam.")
-    console.print("Once done, setup is complete for EVERY OnlineFix games for THIS Steam account")
+    console.print(lang["setup.onlinefix.login_steam"])
+    console.print(lang["setup.onlinefix.setup_complete"])
     pause()
     mark_done(CRACK_TYPES.OnlineFix)
 
@@ -108,7 +108,7 @@ def goldberg_setup():
         
         gse_config.write()
 
-        console.print(f"Setup complete for Goldberg in {settings_folder}")
+        console.print(lang["setup.goldberg.setup_complete"](settings_folder=settings_folder))
         pause(clear=True)
         # Mark config complete
         mark_done(CRACK_TYPES.Goldberg)
@@ -122,18 +122,18 @@ def goldberg_setup():
     # Check if files exists and Show existing data
     file_exists = settings_path.is_file()
     if file_exists:
-        console.print("[yellow]You have an existing configuration from past pirated games that uses Goldberg.")
+        console.print(lang["setup.goldberg.existing_config"])
         exists = True
         gse_config = ConfigObj(str(settings_path))
         account_name = gse_config["user::general"].get("account_name", gv_name)
         id_content = gse_config["user::general"].get("account_steamid", id_content)
-        console.print(f"Current username is: {account_name}")
-        console.print(f"Current steam id is: {id_content}")
+        console.print(lang["setup.goldberg.current_username"](account_name=account_name))
+        console.print(lang["setup.goldberg.current_steam_id"](id_content=id_content))
 
         # Prompt setup to modify if exists
         if exists:
-            proceed = inquirer.confirm(message="Would you like to change this?...",
-                                       instruction="Not proceeding will complete the setup. (Y/n)",
+            proceed = inquirer.confirm(message=lang["setup.prompts.modify_config.message"],
+                                       instruction=lang["setup.prompts.modify_configinstruction"],
                                        default=True).execute()
             if not proceed: 
                 mark_done(CRACK_TYPES.Goldberg)
@@ -158,7 +158,7 @@ def other_setup():
     try:
         prompt_dicts_list = parse_setup_options()
     except:
-        raise Exception("Prompt empty even though setup exists.")
+        raise Exception(lang["errors.prompt_empty"])
 
     for prompt_dict in prompt_dicts_list:
         config_other = ConfigObj(str(Path(os.path.expandvars(prompt_dict["Path"])).resolve()))
@@ -186,7 +186,7 @@ def other_setup():
         config_other[prompt_dict["Section"]][prompt_dict["Key"]] = user_id_input
         config_other.write()
         #Path(os.path.expandvars(prompt_dict["Path"])).resolve().write_text(user_id_input, encoding="utf-8")
-    console.print(f"Setup complete!")
+    console.print(lang["setup.messages.setup_complete"])
     pause(clear=True)
     mark_done(CRACK_TYPES.Other)
 
@@ -205,7 +205,7 @@ def rune_setup():
     # copy to game if version choice is pirated
 
     # mark_done()
-    console.print("Unimplemented")
+    console.print(lang["setup.general.setup_unimplemented"])
     clear_screen()
     return
 
@@ -221,7 +221,7 @@ def goldberg_old_setup():
         (settings_folder / "account_name.txt").write_text(name_input, encoding="utf-8")
         (settings_folder / "user_steam_id.txt").write_text(user_id_input, encoding="utf-8")
         
-        console.print(f"Setup complete for Goldberg Old in {settings_folder}")
+        console.print(lang["setup.goldberg.old_setup_complete"](settings_folder=settings_folder))
         pause(clear=True)
         # Mark config complete
         mark_done(CRACK_TYPES.Goldberg_Old)
@@ -237,19 +237,19 @@ def goldberg_old_setup():
     name_exists = settings_name_path.is_file()
     id_exists = settings_id_path.is_file()
     if name_exists or id_exists:
-        console.print("[yellow]You have an existing configuration from past pirated games that uses Goldberg.")
+        console.print(lang["setup.goldberg.old_existing_config"])
         exists = True
         if name_exists:
             account_name = settings_name_path.read_text(encoding="utf-8").strip()
-            console.print(f"Current username is, {account_name}")
+            console.print(lang["setup.goldberg.current_username"](account_name=account_name))
         if id_exists:
             id_content = settings_id_path.read_text(encoding="utf-8").strip()
-            console.print(f"Current steam id is, {id_content}")
+            console.print(lang["setup.goldberg.current_steam_id"](id_content=id_content))
 
         # Prompt setup to modify if exists
         if exists:
-            proceed = inquirer.confirm(message="Would you like to change this?...",
-                                       instruction="Not proceeding will complete the setup. (Y/n)",
+            proceed = inquirer.confirm(message=lang["setup.prompts.modify_config.message"],
+                                       instruction=lang["setup.prompts.modify_config.instruction"],
                                        default=True).execute()
             if not proceed: 
                 mark_done(CRACK_TYPES.Goldberg_Old)
@@ -263,25 +263,23 @@ def goldberg_old_setup():
     clear_screen()
 
 def prompt_name(current_name: str):
-    name_input = inquirer.text(message="Enter your in-game name:", 
+    name_input = inquirer.text(message=lang["setup.prompts.enter_in_game_name.message"], 
                                 default=current_name,
                                 validate= lambda result: len(result) > 0
                                 ).execute()
     return name_input
 
 def prompt_steam_id(current_id: str):
-    console.print("A web page will open for you to find your Steam ID")
+    console.print(lang["setup.messages.steam_id_webpage"])
     sleep(2)
     webbrowser.open(f"https://steamid.xyz/{current_id}")
        
-    l_instruction = f"""\
-{get_l_instruction_suffix(key_action="steam_id")}
-Some games' save file are located in this Steam ID.
-Best to stick to one Steam ID or else you'll have to manually migrate your save files when you change midway.
-You can choose a fake or your own, doesn't matter.
-"""
+    l_instruction = "\n".join([
+        get_l_instruction_suffix(key_action="steam_id"),
+        lang["setup.prompts.enter_steam_id.long_instruction"]
+    ])
 
-    prompt = inquirer.text(message="Enter your Steam64 ID:", 
+    prompt = inquirer.text(message=lang["setup.prompts.enter_steam_id.message"], 
                                     default=current_id,
                                     long_instruction=l_instruction,
                                     validate=validate_steam_id

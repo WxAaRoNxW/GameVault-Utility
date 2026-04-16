@@ -4,7 +4,7 @@ from pathlib import Path
 import sys
 import subprocess
 from setup_game import CRACK_TYPES, is_complete, one_time_setup
-from config_loader import BASE_PATH, DEBUG, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version, validate_paths
+from config_loader import BASE_PATH, DEBUG, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version, validate_paths, lang
 from util import clear_screen, get_exe_path, sleep
 from version_changer import change_version
 from gamevault_exec_handler import set_executable
@@ -30,7 +30,7 @@ def start_game(close_console: bool = False):
     exe_path = Path(exe_path)
 
     if exe_path.exists() and exe_path.is_file():
-        console.print(f"Starting game...")
+        console.print(lang["start.starting_game"])
         
         if close_console:
             subprocess.Popen(exe_path)
@@ -40,7 +40,7 @@ def start_game(close_console: bool = False):
             subprocess.run(exe_path) # wait until process closes before continuing
         sys.exit(0)
     else:
-        console.print("[red]Executable path not found in external config.")
+        console.print(lang["start.exec_path_not_found"])
         sleep(2)
 
 # 2. Start game and don't ask again
@@ -48,7 +48,7 @@ def start_game_no_prompt():
     # Update executable of gamevault-exec
     set_executable(str(BASE_PATH / get_config_value(Config.Default.str(), Config.Default.Executable)))
     
-    console.print(f"Updated gamevault-exec file to skip prompt next time. You can always open this console again through the game's folder, GVU.exe.")
+    console.print(lang["start.updated_exec_file"])
     sleep(3)
     start_game(close_console=True)
 
@@ -57,11 +57,11 @@ def prompt_change_version():
     choice = inquirer.select(
         message=get_change_version_choice_str()+":",
         choices=[
-            "Original",
-            "Pirated",
-            Choice(value=None, name="Back")
+            lang["change_version.original"],
+            lang["change_version.modified"],
+            Choice(value=None, name=lang["change_version.back_option"])
         ],
-        default="Original",
+        default=lang["change_version.original"],
 
     ).execute()
 
@@ -82,27 +82,27 @@ def get_setup_choice_str(setup_type: str, setup_done: bool):
     # Build option 3 string
     match CRACK_TYPES[setup_type]:
         case CRACK_TYPES.OnlineFix:
-            choice_string = f"One-time global setup for '{setup_type}'"
+            choice_string = lang["main_menu.one_time_for_x"](setup_type=setup_type)
         case CRACK_TYPES.Goldberg:
-            choice_string = f"One-time global setup for '{setup_type}'"
+            choice_string = lang["main_menu.one_time_for_x"](setup_type=setup_type)
         case CRACK_TYPES.RUNE:
-            choice_string = f"Per-Game Setup for '{setup_type}'"
+            choice_string = lang["main_menu.per_game_for_x"](setup_type=setup_type)
         case CRACK_TYPES.Other:
-            choice_string = f"Per-Game Setup"
+            choice_string = lang["main_menu.per_game_default"]
         case CRACK_TYPES.Goldberg_Old:
-            choice_string = f"One-time global setup for '{setup_type}'"
+            choice_string = lang["main_menu.one_time_for_x"](setup_type=setup_type)
         case _:
-            choice_string = "Option error, Contact GameVault Admin!"
+            choice_string = lang["main_menu.option_error"]
             is_error = True
     if setup_done and not is_error:
         choice_string += " (complete)"
-    
+
     return choice_string
 def get_change_version_choice_str():
-    choice_string = "Change version"
+    choice_string = lang["change_version.message"]
     current_version = get_config_value(Config.Default.str(), Config.Default.GameVersion, "")
     if current_version:
-        choice_string += f". Current: {current_version}"
+        choice_string += ". " + lang["change_version.current_version"](version=current_version)
     return choice_string
 
 def setup_choices():
@@ -113,8 +113,8 @@ def setup_choices():
 
     choices: list = []
     if setup_done:
-        choices.append(Choice(value=MenuChoices.StartAlways,   name="Start game and don't ask again"))
-        choices.append(Choice(value=MenuChoices.Start,         name="Start game (This window will remain open to track playtime!)"))
+        choices.append(Choice(value=MenuChoices.StartAlways,   name=lang["main_menu.start_always"]))
+        choices.append(Choice(value=MenuChoices.Start,         name=lang["main_menu.start"]))
         if has_setup:
             choices.append(Choice(value=MenuChoices.Setup,     name=get_setup_choice_str(setup_type, setup_done)))
         if has_original:
@@ -122,7 +122,7 @@ def setup_choices():
     else:
         choices.append(Choice(value=MenuChoices.Setup,     name=get_setup_choice_str(setup_type, setup_done)))
 
-    choices.append(Choice(value=None, name="Exit"))
+    choices.append(Choice(value=None, name=lang["main_menu.exit"]))
 
     return choices
 
@@ -158,9 +158,9 @@ def main():
 
     choices = setup_choices()
     choice: MenuChoices | None = inquirer.select(
-        message="Select an option:",
+        message=lang["main_menu.prompt_option.message"],
         choices=choices,
-        instruction="Use Arrow Keys",
+        instruction=lang["main_menu.prompt_option.instruction"],
         default="Original",
     ).execute()
     
@@ -182,7 +182,7 @@ def main():
 if __name__ == "__main__":
     if not DEBUG:
         if not ctypes.windll.shell32.IsUserAnAdmin():
-            print("Requesting admin privileges...")
+            print(lang["messages.requesting_admin"])
             params = f'"{sys.argv[0]}" {" ".join(sys.argv[1:])}'
             ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, params, None, 1)
             sys.exit(0)

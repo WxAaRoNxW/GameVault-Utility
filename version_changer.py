@@ -1,7 +1,7 @@
 from pathlib import Path
 import shutil
 from typing import Literal
-from config_loader import BASE_PATH, ORIGINAL_FILES_PATH, CRACK_FILES_PATH, Config, set_config_values
+from config_loader import BASE_PATH, ORIGINAL_FILES_PATH, CRACK_FILES_PATH, Config, set_config_values, lang
 from util import pause
 from logger import console
 
@@ -14,7 +14,7 @@ def change_version(version: Literal["Original", "Pirated"]):
     elif version == "Pirated":
         source_folder, delete_folder = folder2, folder1
     else:
-        console.print("Invalid choice, cancelling version update.")
+        console.print(lang["change_version.invalid_version_choice"])
         return
 
     # --- Recursively delete matching files in BASE_PATH ---

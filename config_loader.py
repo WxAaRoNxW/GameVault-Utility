@@ -7,11 +7,13 @@ from configobj import ConfigObj
 
 from util import pause
 from logger import console
-
+from lang import Lang
 if getattr(sys, 'frozen', False):
     DEBUG = False
 else:
     DEBUG = True
+
+lang = Lang("localization.json", "en")
 
 script_version = "v3.3.0"
 
@@ -54,19 +56,19 @@ def validate_paths():
     global config
     if not CONFIG_COPY_PATH.is_file():
         if CONFIG_PATH.is_file(): 
-            console.print(f"'{custom_script_filename}{custom_script_copy_append}.ini' is missing, but still functional, ask GameVault Admin for repair file")
+            console.print(lang["messages.config_missing"](custom_script_filename=custom_script_filename, custom_script_copy_append=custom_script_copy_append))
             pause(clear=True)
         else:
-            raise FileNotFoundError(f"'{custom_script_filename}{custom_script_copy_append}.ini' is missing, ask GameVault Admin for repair file")
+            raise FileNotFoundError(lang["errors.config_missing_backup"](custom_script_filename=custom_script_filename, custom_script_copy_append=custom_script_copy_append))
     if not CONFIG_PATH.is_file(): # copy if main config is missing
         shutil.copy2(CONFIG_COPY_PATH, CONFIG_PATH)
 
     config = ConfigObj(str(CONFIG_PATH))
 
-    if not GAMEVAULT_EXEC_CONFIG.is_file(): raise FileNotFoundError(f"gamevault-exec missing, is the {custom_script_name} script in the right path?")
+    if not GAMEVAULT_EXEC_CONFIG.is_file(): raise FileNotFoundError(lang["errors.gamevault_exec_missing"](custom_script_name=custom_script_name))
     has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
-    if has_original and not ORIGINAL_FILES_PATH.is_dir(): raise FileNotFoundError(f"'original files' folder missing, is this a {custom_script_name} compatible game?")
-    if has_original and not CRACK_FILES_PATH.is_dir(): raise FileNotFoundError(f"'crack files' folder missing, is this a {custom_script_name} compatible game?")
+    if has_original and not ORIGINAL_FILES_PATH.is_dir(): raise FileNotFoundError(lang["errors.original_files_missing"](custom_script_name=custom_script_name))
+    if has_original and not CRACK_FILES_PATH.is_dir(): raise FileNotFoundError(lang["errors.crack_files_missing"](custom_script_name=custom_script_name))
 
 # Config Schematic
 @dataclass(frozen=True)
@@ -118,7 +120,7 @@ def parse_tuple_list_string(content: str, required_length: int, keys: tuple) -> 
     if required_length == 0:
         return False
     if content == "":
-        raise Exception("string empty")
+        raise Exception(lang["errors.string_empty"])
     content_list = content.strip().split(",,") 
 
     content_tuple_list = []
@@ -130,7 +132,7 @@ def parse_tuple_list_string(content: str, required_length: int, keys: tuple) -> 
     
     # Validate tuple length
     if not all(len(t) == required_length for t in content_tuple_list):
-        raise ValueError(f"Each entry must be a/n {required_length}-tuple")
+        raise ValueError(lang["errors.tuple_validation_failed"](required_length=required_length))
     
     # result = [dict(zip(keys, tupleVal)) for tupleVal in points]
     result: list[dict[str, str]] = []
