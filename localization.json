@@ -9,7 +9,7 @@
         "main_menu": {
             "prompt_option": {
                 "message": "Select an option:",
-                "instruction": "Use Arrow Keys"
+                "instruction": "Use Arrow Keys to navigate, Enter to select"
             },
             "one_time_for_x": "One-time global setup for '{setup_type}'",
             "per_game_for_x": "Per-Game Setup for '{setup_type}'",
