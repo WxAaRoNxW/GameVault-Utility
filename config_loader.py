@@ -23,11 +23,6 @@ custom_script_filename = "gvu_config"
 custom_script_copy_append = "_copy_DO_NOT_DELETE"
 
 # ----------------------------
-# Special
-# ----------------------------
-no_gamevault_mode = False   # For disregarding GameVault related configs
-
-# ----------------------------
 # Base Paths
 # ----------------------------
 BASE_PATH                   = Path.cwd()
@@ -68,14 +63,16 @@ def validate_paths():
 
     config = ConfigObj(str(CONFIG_PATH))
 
-    if not GAMEVAULT_EXEC_CONFIG.is_file(): 
+    no_gamevault_mode = get_config_value(Config.Other.str(), Config.Other.NoGameVaultMode, "False").lower() == "false"
+    if not GAMEVAULT_EXEC_CONFIG.is_file() and no_gamevault_mode: 
         proceed = inquirer.confirm(message=lang["no_gamevault.prompts.not_in_gamevault.message"],
                                    instruction=lang["no_gamevault.prompts.not_in_gamevault.instruction"],
                                    long_instruction=lang["no_gamevault.prompts.not_in_gamevault.l_instruction"],
                             default=True).execute()
         if not proceed:
             raise FileNotFoundError(lang["errors.gamevault_exec_missing"](custom_script_name=custom_script_name))
-        no_gamevault_mode = True
+        set_config_values(Config.Other.str(), Config.Other.NoGameVaultMode, "True")
+
     has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
     if has_original and not ORIGINAL_FILES_PATH.is_dir(): raise FileNotFoundError(lang["errors.original_files_missing"](custom_script_name=custom_script_name))
     if has_original and not CRACK_FILES_PATH.is_dir(): raise FileNotFoundError(lang["errors.crack_files_missing"](custom_script_name=custom_script_name))
@@ -107,6 +104,11 @@ class Config:
         PathMoveLinkingComplete: str = "PathMoveLinkingComplete"
         def str():
             return "SETUP"
+    @dataclass(frozen=True)
+    class Other:
+        NoGameVaultMode: str = "NoGameVaultMode"
+        def str():
+            return "OTHER"
 
 # ----------------------------
 # Load external config
