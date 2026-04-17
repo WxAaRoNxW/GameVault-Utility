@@ -21,3 +21,6 @@ def set_executable(path: Path):
     with GAMEVAULT_EXEC_CONFIG.open("w", encoding="utf-8") as f:
         for key, value in data.items():
             f.write(f"{key}={value}\n")
+
+#def set_gamevault_id(game_dir_name: str):
+#   

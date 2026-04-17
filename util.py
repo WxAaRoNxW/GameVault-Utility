@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import shutil
 import sys
 import time
 import uuid
@@ -87,3 +88,32 @@ def clear_input_buffer():
 def sleep(seconds: float):
     time.sleep(seconds)
     clear_input_buffer()
+
+# scrapes for the original steam_api.dll
+def find_file(filename: str, search_path: str, exclude_dir: str) -> Path:
+    for path in Path(search_path).rglob(filename):
+        if exclude_dir not in path.parts:
+            return path
+    return None
+
+def copy_files_from_reference(search_path: Path, reference_dir: Path, destination: Path) -> set[str]:
+    found_files = set()
+    # 3. Scan reference dirs files to look for it in BASE_PATH
+    for ref_file in reference_dir.rglob("*"):
+        if not ref_file.is_file():
+            continue
+        
+        # Get relative file to look for in 
+        relative = ref_file.relative_to(reference_dir) # ex ref_dir/dir1/file becomes dir1/file
+        source = search_path / relative # concatenate, ex. becomes search_path/dir1/file
+        if not source.exists() or not source.is_file():
+            continue
+
+        actual_destination = destination / relative
+        actual_destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, actual_destination)
+
+        found_files.add(ref_file.name)
+
+    # 4. find files
+    return found_files
