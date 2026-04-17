@@ -180,4 +180,7 @@ _original files/
 Engine/
 gvu_*
 _*
+!_GVU
+_GVU/*
+!_GVU/locale
 *.exe

@@ -24,4 +24,4 @@ class Lang:
             return lambda **kwargs: value.format(**kwargs)
         return value
 
-lang = Lang("localization.json", "en")
+lang = Lang("_GVU/locale/localization.json", "en")
