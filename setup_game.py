@@ -48,7 +48,7 @@ def is_complete() -> bool:
         case CRACK_TYPES.Goldberg:
             setup_done = get_global_config_value(GlobalConfig.Setup.str(), GlobalConfig.Setup.Goldberg, "False").lower() == "true"            
         case CRACK_TYPES.RUNE | CRACK_TYPES.Other:
-            # just get config value in _crack files folder instead
+            # just get config value in _cracked files folder instead
             setup_done = get_config_value(Config.Crack.str(), Config.Crack.SetupComplete, "False").lower() == "true"
         case CRACK_TYPES.NoSetup:
             setup_done = True

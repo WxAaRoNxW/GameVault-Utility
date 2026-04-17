@@ -13,4 +13,4 @@ def validate_paths():
 
     has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
     if has_original and not ORIGINAL_FILES_PATH.is_dir(): raise FileNotFoundError(lang["errors.original_files_missing"](custom_script_name=custom_script_name))
-    if has_original and not CRACK_FILES_PATH.is_dir(): raise FileNotFoundError(lang["errors.crack_files_missing"](custom_script_name=custom_script_name))
+    if has_original and not CRACKED_FILES_PATH.is_dir(): raise FileNotFoundError(lang["errors.crack_files_missing"](custom_script_name=custom_script_name))

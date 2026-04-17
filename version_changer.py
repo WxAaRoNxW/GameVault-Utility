@@ -1,7 +1,7 @@
 from pathlib import Path
 import shutil
 from typing import Literal
-from config_loader import BASE_PATH, ORIGINAL_FILES_PATH, CRACK_FILES_PATH, Config, set_config_values
+from config_loader import BASE_PATH, ORIGINAL_FILES_PATH, CRACKED_FILES_PATH, Config, set_config_values
 from lang import lang
 from util import pause
 from logger import console
@@ -9,7 +9,7 @@ from logger import console
 def change_version(version: Literal["Original", "Pirated"]):
     base_path = Path(BASE_PATH)
     folder1 = Path(ORIGINAL_FILES_PATH)
-    folder2 = Path(CRACK_FILES_PATH)
+    folder2 = Path(CRACKED_FILES_PATH)
     if version == "Original":
         source_folder, delete_folder = folder1, folder2
     elif version == "Pirated":
