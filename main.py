@@ -186,13 +186,6 @@ def main():
 # Entry point
 # ----------------------------
 if __name__ == "__main__":
-    if not DEBUG:
-        if not ctypes.windll.shell32.IsUserAnAdmin():
-            print(lang["messages.requesting_admin"])
-            params = f'"{sys.argv[0]}" {" ".join(sys.argv[1:])}'
-            ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, params, None, 1)
-            sys.exit(0)
-
     try:
         while True:
             validate_paths()
