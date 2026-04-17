@@ -50,32 +50,16 @@ if os.name == "nt":
 else:
     ROAMING = Path.home() / ".config"
 
-def validate_paths():
-    global config
-    if not CONFIG_COPY_PATH.is_file():
-        if CONFIG_PATH.is_file(): 
-            console.print(lang["messages.config_missing"](custom_script_filename=custom_script_filename, custom_script_copy_append=custom_script_copy_append))
-            pause(clear=True)
-        else:
-            raise FileNotFoundError(lang["errors.config_missing_backup"](custom_script_filename=custom_script_filename, custom_script_copy_append=custom_script_copy_append))
-    if not CONFIG_PATH.is_file(): # copy if main config is missing
-        shutil.copy2(CONFIG_COPY_PATH, CONFIG_PATH)
+if not CONFIG_COPY_PATH.is_file():
+    if CONFIG_PATH.is_file(): 
+        console.print(lang["messages.config_missing"](custom_script_filename=custom_script_filename, custom_script_copy_append=custom_script_copy_append))
+        pause(clear=True)
+    else:
+        raise FileNotFoundError(lang["errors.config_missing_backup"](custom_script_filename=custom_script_filename, custom_script_copy_append=custom_script_copy_append))
+if not CONFIG_PATH.is_file(): # copy if main config is missing
+    shutil.copy2(CONFIG_COPY_PATH, CONFIG_PATH)
 
-    config = ConfigObj(str(CONFIG_PATH))
-
-    no_gamevault_mode = get_config_value(Config.Other.str(), Config.Other.NoGameVaultMode, "False").lower() == "false"
-    if not GAMEVAULT_EXEC_CONFIG.is_file() and no_gamevault_mode: 
-        proceed = inquirer.confirm(message=lang["no_gamevault.prompts.not_in_gamevault.message"],
-                                   instruction=lang["no_gamevault.prompts.not_in_gamevault.instruction"],
-                                   long_instruction=lang["no_gamevault.prompts.not_in_gamevault.l_instruction"],
-                            default=True).execute()
-        if not proceed:
-            raise FileNotFoundError(lang["errors.gamevault_exec_missing"](custom_script_name=custom_script_name))
-        set_config_values(Config.Other.str(), Config.Other.NoGameVaultMode, "True")
-
-    has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
-    if has_original and not ORIGINAL_FILES_PATH.is_dir(): raise FileNotFoundError(lang["errors.original_files_missing"](custom_script_name=custom_script_name))
-    if has_original and not CRACK_FILES_PATH.is_dir(): raise FileNotFoundError(lang["errors.crack_files_missing"](custom_script_name=custom_script_name))
+config = ConfigObj(str(CONFIG_PATH))
 
 # Config Schematic
 @dataclass(frozen=True)
