@@ -76,7 +76,7 @@ def one_time_setup():
         case CRACK_TYPES.Other:
             other_setup()
         case _:
-            console.print(lang["messages.cant_identify_crack"])
+            console.print(lang["setup.messages.cant_identify_crack"])
             pause(clear=True)
 
 def onlinefix_setup():
