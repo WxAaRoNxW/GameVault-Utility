@@ -1,6 +1,31 @@
 # Changelog
 <details open>
 <summary><b>
+v4.0.0
+</b></summary>
+
+- Added
+    - Standalone mode to allow using GVU outside of GameVault Games to pass it around to legitimate users.
+        - Backs up original files for restoration when switching back to legitimate for cases where the game does not have an original stored.
+    - Localization for better handling of messages, through json files.
+    - Config template in repository.
+
+- Changed
+    - Run gamevault games through url protocol gamevault://start
+    - Close program instead of hiding when starting game, since GameVault detects based on if the app name is contained in GameVault games.
+        - Also means GVU.exe needs to be prefixed per game or else it will cause all GVU handled games to update its `Last Played` / `Play Time`
+    - Move global config to roaming instead.
+        - For compatibility with No GameVault Mode.
+        - To avoid newly formatted PC's from thinking that GameVault has already been setup on new machines.
+    - Rename crack files dir name to cracked files for consistency.
+    - UAC admin request changed to use pyinstaller built-in argument.
+    - Change symlink behavior partially for optimization and decoupling.
+    - Better instructions in main menu.
+
+</details>
+
+<details>
+<summary><b>
 v3.3.0
 </b></summary>
 
