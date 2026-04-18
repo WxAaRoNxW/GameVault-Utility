@@ -1,11 +1,10 @@
-import ctypes
 from enum import Enum
 from pathlib import Path
 import sys
 import subprocess
 import webbrowser
 from setup_game import CRACK_TYPES, is_complete, one_time_setup
-from config_loader import BASE_PATH, DEBUG, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version
+from config_loader import BASE_PATH, Config, get_config_value, set_config_values, script_version
 from validate import validate_paths
 from lang import lang
 from util import clear_screen, get_exe_path, sleep

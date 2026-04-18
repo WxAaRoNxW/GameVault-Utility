@@ -4,7 +4,6 @@ from pathlib import Path
 import shutil
 import sys
 from configobj import ConfigObj
-from InquirerPy import inquirer
 
 from util import pause
 from logger import console

@@ -3,7 +3,6 @@ from pathlib import Path
 import shutil
 import sys
 import time
-import uuid
 from logger import console
 from lang import lang
 

@@ -1,8 +1,6 @@
 {
     "en": {
         "messages": {
-            "requesting_admin": "Requesting admin privileges...",
-            
             "config_missing": "'{custom_script_filename}{custom_script_copy_append}.ini' is missing, but still functional, ask GameVault Admin for repair file",
             "invalid_yes_no": "Please enter y or n."
         },

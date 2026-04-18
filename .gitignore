@@ -175,10 +175,6 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python
 
-_crack files/
-_original files/
-Engine/
-gvu_*
 _*
 !_GVU
 _GVU/*

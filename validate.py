@@ -1,6 +1,7 @@
 from config_loader import *
 from util import clear_screen, copy_files_from_reference
 import re
+from InquirerPy import inquirer
 
 def validate_paths():
     GLOBAL_CONFIG.parent.mkdir(parents=True, exist_ok=True)

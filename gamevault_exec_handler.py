@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from config_loader import BASE_PATH, GAMEVAULT_EXEC_CONFIG
+from config_loader import GAMEVAULT_EXEC_CONFIG
 
 def set_executable(path: Path):
     data = {}
