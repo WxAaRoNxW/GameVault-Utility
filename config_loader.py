@@ -67,6 +67,7 @@ class Config:
     class Default:
         Executable: str = "Executable"
         GameVersion: str = "GameVersion"
+        GameVaultGameID = "GameVaultGameID" # To launch the game through gamevault url
         DontAskAgain: str = "DontAskAgain"
         NoOriginal: str = "NoOriginal"
 

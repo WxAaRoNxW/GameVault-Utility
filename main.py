@@ -3,6 +3,7 @@ from enum import Enum
 from pathlib import Path
 import sys
 import subprocess
+import webbrowser
 from setup_game import CRACK_TYPES, is_complete, one_time_setup
 from config_loader import BASE_PATH, DEBUG, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version
 from validate import validate_paths
@@ -27,18 +28,29 @@ def start_game():
     if (dont_ask_again):
         set_config_values(Config.Default.str(), Config.Default.DontAskAgain, "False")
         set_executable(get_exe_path()) # revert to this python.exe
-    # run exe
-    exe_path = get_config_value(Config.Default.str(), Config.Default.Executable)
-    exe_path = Path(exe_path)
-
-    if exe_path.exists() and exe_path.is_file():
-        console.print(lang["start.starting_game"])
-        
-        subprocess.Popen(exe_path)
+    
+    console.print(lang["start.starting_game"])
+    no_gamevault_mode = get_config_value(Config.Other.str(), Config.Other.NoGameVaultMode, "False").lower() == "true"
+    if not no_gamevault_mode:
+        gamevault_game_id = get_config_value(Config.Default.str(), Config.Default.GameVaultGameID, default="-1")
+        if gamevault_game_id == "-1":
+            raise ValueError("validate.errors.gamevault_game_id")
+        webbrowser.open(f"gamevault://start?gameid={gamevault_game_id}")
+        sleep(1)
         sys.exit(0)
     else:
-        console.print(lang["start.exec_path_not_found"])
-        sleep(2)
+        # run exe
+        exe_path = get_config_value(Config.Default.str(), Config.Default.Executable)
+        exe_path = Path(exe_path)
+
+        if exe_path.exists() and exe_path.is_file():
+            subprocess.Popen(exe_path)
+            sleep(1)
+            sys.exit(0)
+        else:
+            console.print(lang["start.exec_path_not_found"])
+            sleep(2)
+
 
 # 2. Start game and don't ask again
 def start_game_no_prompt():
