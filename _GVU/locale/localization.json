@@ -28,9 +28,9 @@
         },
         "setup": {
             "messages": {
-                "setup_complete": "Setup complete!",
-                "setup_unimplemented": "Unimplemented",
-                "setup_cant_identify_crack": "Can't identify crack type, contact GameVault admin.",
+                "complete": "Setup complete!",
+                "unimplemented": "Unimplemented",
+                "cant_identify_crack": "Can't identify crack type, contact GameVault admin.",
                 "steam_id_webpage": "A web page will open for you to find your Steam ID"
             },
             "prompts": {

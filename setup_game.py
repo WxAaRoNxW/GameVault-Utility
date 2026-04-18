@@ -35,7 +35,7 @@ def mark_done(setup_type: CRACK_TYPES):
         case CRACK_TYPES.NoSetup:
             return
         case _:
-            console.print(lang["setup.messages.setup_cant_identify_crack"])
+            console.print(lang["setup.messages.cant_identify_crack"])
             pause(clear=True)
 
 def is_complete() -> bool:
@@ -187,7 +187,7 @@ def other_setup():
         config_other[prompt_dict["Section"]][prompt_dict["Key"]] = user_id_input
         config_other.write()
         #Path(os.path.expandvars(prompt_dict["Path"])).resolve().write_text(user_id_input, encoding="utf-8")
-    console.print(lang["setup.messages.setup_complete"])
+    console.print(lang["setup.messages.complete"])
     pause(clear=True)
     mark_done(CRACK_TYPES.Other)
 
@@ -206,7 +206,7 @@ def rune_setup():
     # copy to game if version choice is pirated
 
     # mark_done()
-    console.print(lang["setup.general.setup_unimplemented"])
+    console.print(lang["setup.general.unimplemented"])
     clear_screen()
     return
 
