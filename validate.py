@@ -1,13 +1,15 @@
 from config_loader import *
-from util import copy_files_from_reference
+from util import clear_screen, copy_files_from_reference
 
 def validate_paths():
+    GLOBAL_CONFIG.parent.mkdir(parents=True, exist_ok=True)
     no_gamevault_mode = get_config_value(Config.Other.str(), Config.Other.NoGameVaultMode, "False").lower() == "false"
     if not GAMEVAULT_EXEC_CONFIG.is_file() and no_gamevault_mode: 
         proceed = inquirer.confirm(message=lang["no_gamevault.prompts.not_in_gamevault.message"],
                                    instruction=lang["no_gamevault.prompts.not_in_gamevault.instruction"],
                                    long_instruction=lang["no_gamevault.prompts.not_in_gamevault.l_instruction"],
                             default=True).execute()
+        clear_screen()
         if not proceed:
             raise FileNotFoundError(lang["errors.gamevault_exec_missing"](custom_script_name=custom_script_name))
         setup_no_gamevault()

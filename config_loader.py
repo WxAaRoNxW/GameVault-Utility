@@ -36,19 +36,18 @@ PERSISTENT_DATA_GAME_PATH   = PERSISTENT_DATA_PATH / GAME_NAME
 # ----------------------------
 # Paths
 # ----------------------------
-
-CONFIG_PATH                 = BASE_PATH / gvu_config_dir / f"{custom_script_filename}.ini"                    # external config
-CONFIG_COPY_PATH            = BASE_PATH / gvu_config_dir / f"{custom_script_filename}{custom_script_copy_append}.ini" # external config copy
-GAMEVAULT_EXEC_CONFIG       = GAMEVAULT_GAME_PATH / "gamevault-exec"               # parent path's config file
-ORIGINAL_FILES_PATH         = BASE_PATH / gvu_config_dir / "original files"
-CRACK_FILES_PATH            = BASE_PATH / gvu_config_dir / "crack files"
-GLOBAL_CONFIG               = GAMEVAULT_ROOT_PATH / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
-
 # Get user Roaming folder
 if os.name == "nt":
     ROAMING = Path(os.getenv("APPDATA"))
 else:
     ROAMING = Path.home() / ".config"
+    
+CONFIG_PATH                 = BASE_PATH / gvu_config_dir / f"{custom_script_filename}.ini"                    # external config
+CONFIG_COPY_PATH            = BASE_PATH / gvu_config_dir / f"{custom_script_filename}{custom_script_copy_append}.ini" # external config copy
+GAMEVAULT_EXEC_CONFIG       = GAMEVAULT_GAME_PATH / "gamevault-exec"               # parent path's config file
+ORIGINAL_FILES_PATH         = BASE_PATH / gvu_config_dir / "original files"
+CRACKED_FILES_PATH          = BASE_PATH / gvu_config_dir / "cracked files"
+GLOBAL_CONFIG               = ROAMING / custom_script_name / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
 
 if not CONFIG_COPY_PATH.is_file():
     if CONFIG_PATH.is_file(): 
