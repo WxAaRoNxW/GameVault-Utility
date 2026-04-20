@@ -21,21 +21,32 @@ from InquirerPy.utils import color_print
 # ----------------------------
 
 # 1. Start game
-def start_game():
+def start_game(reset: bool = True):
+    
     # reset Don't Ask Again
     dont_ask_again = get_config_value(Config.Default.str(), Config.Default.DontAskAgain, "False").lower() == "true"
-    if (dont_ask_again):
-        set_config_values(Config.Default.str(), Config.Default.DontAskAgain, "False")
-        set_executable(get_exe_path()) # revert to this python.exe
     
     console.print(lang["start.starting_game"])
     no_gamevault_mode = get_config_value(Config.Other.str(), Config.Other.NoGameVaultMode, "False").lower() == "true"
     if not no_gamevault_mode:
+        # GV game's launch exe is this python program, set executable to the game's then reset
+        if not dont_ask_again:
+            # Update executable of gamevault-exec temporarily
+            set_executable(str(BASE_PATH / get_config_value(Config.Default.str(), Config.Default.Executable)))
+            set_config_values(Config.Default.str(), Config.Default.DontAskAgain, "False")
+            dont_ask_again = False
+            reset = True
+            
+        # GV game's launch exe is set to the actual game's .exe, just open browser then reset
         gamevault_game_id = get_config_value(Config.Default.str(), Config.Default.GameVaultGameID, default="-1")
         if gamevault_game_id == "-1":
             raise ValueError("validate.errors.gamevault_game_id")
         webbrowser.open(f"gamevault://start?gameid={gamevault_game_id}")
         sleep(1)
+
+        # no need to reset if it was already default
+        if reset:
+            set_executable(get_exe_path()) # revert to this python.exe
         sys.exit(0)
     else:
         # run exe
@@ -58,7 +69,7 @@ def start_game_no_prompt():
     
     console.print(lang["start.updated_exec_file"])
     sleep(3)
-    start_game()
+    start_game(reset = False)
 
 # 4. Change version (delete files in __folder1, merge __folder2 into base)
 def prompt_change_version():
@@ -153,6 +164,7 @@ def setup_links():
     move_source_and_link_dir(target_source_dict_list, exist_ok=True)
 
     set_config_values(Config.Setup.str(), Config.Setup.PathMoveLinkingComplete, "True")
+    
 # ----------------------------
 # Main prompt loop
 # ----------------------------
