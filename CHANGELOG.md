@@ -1,6 +1,18 @@
 # Changelog
 <details open>
 <summary><b>
+v4.0.1
+</b></summary>
+
+- Fix
+    - Start Game not working.
+    - Symbolic Linking no longer occurs everytime you enter main menu.
+    - gamevault-exec path not setting correct path when selecting "Start Game".
+    
+</details>
+
+<details>
+<summary><b>
 v4.0.0
 </b></summary>
 

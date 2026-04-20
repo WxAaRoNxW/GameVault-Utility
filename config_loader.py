@@ -13,7 +13,7 @@ if getattr(sys, 'frozen', False):
 else:
     DEBUG = True
 
-script_version = "v4.0.0"
+script_version = "v4.0.1"
 
 gv_name = "GameVault"
 gvu_config_dir = "_GVU/GVU config"
