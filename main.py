@@ -156,6 +156,10 @@ def setup_links():
     set_config_values(Config.Setup.str(), Config.Setup.PathMoveLinkingComplete, "True")
 
 def reset_default_exec():
+    no_gamevault_mode = get_config_value(Config.Other.str(), Config.Other.NoGameVaultMode, "False").lower == "True"
+    if not no_gamevault_mode:
+        return
+
     # Update executable of gamevault-exec temporarily
     set_executable(get_exe_path())
     set_config_values(Config.Default.str(), Config.Default.DontAskAgain, "False")
@@ -204,10 +208,10 @@ def main():
 # ----------------------------
 if __name__ == "__main__":
     try:
+        validate_paths() # must always take precedence
         reset_default_exec()
         setup_links()
         while True:
-            validate_paths()
             main()
             clear_screen()
     except Exception as e:
