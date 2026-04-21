@@ -50,8 +50,8 @@ def setup_no_gamevault():
     shutil.copy2(CONFIG_COPY_PATH, CONFIG_PATH)
     config = ConfigObj(str(CONFIG_PATH))
 
-    # set config of "no original" to true regardless of value
-    set_config_values(Config.Default.str(), Config.Default.NoOriginal, "True")
+    # set config of "no original" to false regardless of value (so version switcher shows up + original was already copied)
+    set_config_values(Config.Default.str(), Config.Default.NoOriginal, "False")
 
     # finish setup
     set_config_values(Config.Other.str(), Config.Other.NoGameVaultMode, "True")
