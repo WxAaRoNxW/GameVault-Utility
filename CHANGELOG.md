@@ -1,6 +1,18 @@
 # Changelog
 <details open>
 <summary><b>
+v4.0.2
+</b></summary>
+
+- Fix
+    - No GameVault mode causes crash. Code execution order changed to prevent any exceptions.
+    - Set NoOriginal config entry to False when NoGameVault mode detected.
+    - Set version changer config during NoGameVault mode to "Original"
+    
+</details>
+
+<details>
+<summary><b>
 v4.0.1
 </b></summary>
 
