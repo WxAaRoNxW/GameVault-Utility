@@ -48,15 +48,20 @@ ORIGINAL_FILES_PATH         = BASE_PATH / gvu_config_dir / "original files"
 CRACKED_FILES_PATH          = BASE_PATH / gvu_config_dir / "cracked files"
 GLOBAL_CONFIG               = ROAMING / custom_script_name / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
 
-if not CONFIG_COPY_PATH.is_file():
-    if CONFIG_PATH.is_file(): 
-        console.print(lang["messages.config_missing"](custom_script_filename=custom_script_filename, custom_script_copy_append=custom_script_copy_append))
-        pause(clear=True)
-    else:
-        raise FileNotFoundError(lang["errors.config_missing_backup"](custom_script_filename=custom_script_filename, custom_script_copy_append=custom_script_copy_append))
-if not CONFIG_PATH.is_file(): # copy if main config is missing
-    shutil.copy2(CONFIG_COPY_PATH, CONFIG_PATH)
-
+try:
+    if not CONFIG_COPY_PATH.is_file():
+        if CONFIG_PATH.is_file(): 
+            console.print(lang["messages.config_missing"](custom_script_filename=custom_script_filename, custom_script_copy_append=custom_script_copy_append))
+            pause(clear=True)
+        else:
+            raise FileNotFoundError(lang["errors.config_missing_backup"](custom_script_filename=custom_script_filename, custom_script_copy_append=custom_script_copy_append))
+    if not CONFIG_PATH.is_file(): # copy if main config is missing
+        shutil.copy2(CONFIG_COPY_PATH, CONFIG_PATH)
+except Exception as e:
+    import traceback
+    traceback.print_exc()
+    pause("\nPress Enter to exit...")
+    sys.exit(1)
 config = ConfigObj(str(CONFIG_PATH))
 
 # Config Schematic
