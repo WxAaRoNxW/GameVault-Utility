@@ -1,10 +1,22 @@
 # Changelog
 <details open>
 <summary><b>
+v4.1.0
+</b></summary>
+
+- Added
+    - Open game through steam when using original version to get steam's api to work. Opening through .exe most of the time won't show on steam you're playing it.
+- Fixed
+    - Launching Games in Original version will now show up on your steam (Given you own it).
+
+</details>
+
+<details>
+<summary><b>
 v4.0.2
 </b></summary>
 
-- Fix
+- Fixed
     - No GameVault mode causes crash. Code execution order changed to prevent any exceptions.
     - Set NoOriginal config entry to False when NoGameVault mode detected.
     - Set version changer config during NoGameVault mode to "Original"
@@ -16,7 +28,7 @@ v4.0.2
 v4.0.1
 </b></summary>
 
-- Fix
+- Fixed
     - Start Game not working.
     - Symbolic Linking no longer occurs everytime you enter main menu.
     - gamevault-exec path not setting correct path when selecting "Start Game".
