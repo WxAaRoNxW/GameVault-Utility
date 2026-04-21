@@ -52,6 +52,7 @@ def setup_no_gamevault():
 
     # set config of "no original" to false regardless of value (so version switcher shows up + original was already copied)
     set_config_values(Config.Default.str(), Config.Default.NoOriginal, "False")
+    set_config_values(Config.Default.str(), Config.Default.GameVersion, "Original")
 
     # finish setup
     set_config_values(Config.Other.str(), Config.Other.NoGameVaultMode, "True")
