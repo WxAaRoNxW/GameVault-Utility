@@ -72,6 +72,7 @@ class Config:
         Executable: str = "Executable"
         GameVersion: str = "GameVersion"
         GameVaultGameID = "GameVaultGameID" # To launch the game through gamevault url
+        SteamAppID: str = "SteamAppID"
         DontAskAgain: str = "DontAskAgain"
         NoOriginal: str = "NoOriginal"
 

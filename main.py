@@ -24,6 +24,15 @@ from InquirerPy.utils import color_print
 def start_game(reset: bool = True):
     console.print(lang["start.starting_game"])
     no_gamevault_mode = get_config_value(Config.Other.str(), Config.Other.NoGameVaultMode, "False").lower() == "true"
+    is_original = get_config_value(Config.Default.str(), Config.Default.GameVersion, "Pirated").lower() == "original"
+    steam_appid = get_config_value(Config.Default.str(), Config.Default.SteamAppID, "-1")
+    if is_original:
+        if steam_appid != "-1": # if no steam id
+            webbrowser.open(f"steam://run/{steam_appid}")
+            sleep(1)
+            sys.exit(0)
+        # else, fallback to other methods
+
     if not no_gamevault_mode:
         # Update executable of gamevault-exec temporarily
         set_executable(str(BASE_PATH / get_config_value(Config.Default.str(), Config.Default.Executable)))
