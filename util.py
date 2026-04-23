@@ -3,6 +3,7 @@ from pathlib import Path
 import shutil
 import sys
 import time
+from typing import Tuple
 from logger import console
 from lang import lang
 
@@ -84,8 +85,12 @@ def find_file(filename: str, search_path: str, exclude_dir: str) -> Path:
             return path
     return None
 
-def copy_files_from_reference(search_path: Path, reference_dir: Path, destination: Path) -> set[str]:
+def copy_files_from_reference(search_path: Path, reference_dir: Path, destination: Path) -> Tuple[set[Path], set[Path]]:
+    return find_files_from_reference(search_path=search_path, reference_dir=reference_dir, destination=destination)
+
+def find_files_from_reference(search_path: Path, reference_dir: Path, destination: Path | None) -> Tuple[set[Path], set[Path]]:
     found_files = set()
+    found_ref_files = set()
     # 3. Scan reference dirs files to look for it in BASE_PATH
     for ref_file in reference_dir.rglob("*"):
         if not ref_file.is_file():
@@ -93,15 +98,18 @@ def copy_files_from_reference(search_path: Path, reference_dir: Path, destinatio
         
         # Get relative file to look for in 
         relative = ref_file.relative_to(reference_dir) # ex ref_dir/dir1/file becomes dir1/file
+        found_ref_files.add(ref_file)
+        
         source = search_path / relative # concatenate, ex. becomes search_path/dir1/file
         if not source.exists() or not source.is_file():
             continue
+        
+        if destination:
+            actual_destination = destination / relative
+            actual_destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, actual_destination)
 
-        actual_destination = destination / relative
-        actual_destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, actual_destination)
-
-        found_files.add(ref_file.name)
+        found_files.add(ref_file)
 
     # 4. find files
-    return found_files
+    return found_files, found_ref_files

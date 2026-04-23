@@ -38,13 +38,43 @@ def get_gamevault_game_ID():
         raise Exception(lang["validate.errors.gamevault_game_id"])
     set_config_values(Config.Default.str(), Config.Default.GameVaultGameID, match.group(1))
 
+def backup_original_files():
+    orig_dir = Path(gvu_config_dir + "/original files")
+    # Backup GVU original files
+    has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
+    if not has_original:
+        return
+    gvu_orig_dir = Path(gvu_config_dir + "/gvu original files")
+    # Check if "gvu original files" exist
+    if gvu_orig_dir.is_dir():
+        return
+    # Check if orig dir is not empty as a precaution
+    if not any(orig_dir.iterdir()):
+        return
+    
+    shutil.move(orig_dir, gvu_orig_dir)
+
 def setup_no_gamevault():
     global config
-    # copy/backup original files
-    required_files = {"steam_api64.dll", "steam_api.dll"}
-    found_files = copy_files_from_reference(BASE_PATH, Path(gvu_config_dir + "/cracked files"), Path(gvu_config_dir + "/original files"))
-    if not found_files & required_files:
-        raise FileNotFoundError(lang["no_gamevault.errors.not_found_steam_api"])
+    # Check if 
+    orig_dir = Path(gvu_config_dir + "/original files")
+    crack_dir = Path(gvu_config_dir + "/cracked files")
+
+    backup_original_files()
+
+    found_files, found_ref_files = copy_files_from_reference(BASE_PATH, crack_dir, orig_dir)
+
+    transformed_found_crack_files = {found_ref_file.relative_to(crack_dir) for found_ref_file in found_ref_files}
+
+    # if true, means all files from crack are found in base_path, meaning there's no original files in base path, pre-cracked
+    game_is_clean = found_files != transformed_found_crack_files
+    if game_is_clean:
+        # copy/backup original files
+        required_files = {"steam_api64.dll", "steam_api.dll"}
+        stripped_found_files = {found_file.name for found_file in found_files}
+        
+        if not stripped_found_files & required_files:
+            raise FileNotFoundError(lang["no_gamevault.errors.not_found_steam_api"])
     
     # replace old config in case it was used by an old user
     shutil.copy2(CONFIG_COPY_PATH, CONFIG_PATH)
