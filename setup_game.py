@@ -134,7 +134,7 @@ def goldberg_setup():
         # Prompt setup to modify if exists
         if exists:
             proceed = inquirer.confirm(message=lang["setup.prompts.modify_config.message"],
-                                       instruction=lang["setup.prompts.modify_configinstruction"],
+                                       instruction=lang["setup.prompts.modify_config.instruction"],
                                        default=True).execute()
             if not proceed: 
                 mark_done(CRACK_TYPES.Goldberg)
