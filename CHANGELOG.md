@@ -1,6 +1,20 @@
 # Changelog
 <details open>
 <summary><b>
+v4.2.0
+</b></summary>
+
+- Added
+    - No GameVault Mode
+        - Backup of GVU original when using.
+        - Double check game files if it was modified before using as original files backup.
+- Fixed
+    - Incorrect locale for GSE instruction.
+
+</details>
+
+<details>
+<summary><b>
 v4.1.0
 </b></summary>
 
