@@ -1,6 +1,23 @@
 # Changelog
 <details open>
 <summary><b>
+v5.0.0
+</b></summary>
+
+- Added
+    - Send to Friend - Easily compresses the game for users to send their copy of GVU to a legitimate user.
+
+- Changed
+    - Copy "orig files" to a temp dir before sending to orig files to check if it is a valid clean files.
+
+- Fixed
+    - Missing text for GSE instruction.
+    - Backup orig files always seeing game folder as clean, potentially making original files contain cracked files.
+
+</details>
+
+<details>
+<summary><b>
 v4.2.0
 </b></summary>
 
