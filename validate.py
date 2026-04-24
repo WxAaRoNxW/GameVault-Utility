@@ -63,10 +63,8 @@ def setup_no_gamevault():
     # Copy files to temp location and get results to check if game is clean
     found_files, found_ref_files = copy_files_from_reference(BASE_PATH, crack_dir, temp_dir)
 
-    transformed_found_crack_files = {found_ref_file.relative_to(crack_dir) for found_ref_file in found_ref_files}
-
     # if true, means all files from crack are found in base_path, meaning there's no original files in base path, pre-cracked
-    game_is_clean = found_files != transformed_found_crack_files
+    game_is_clean = found_files != found_ref_files
     if game_is_clean:
         # Only backup and move if game is clean
         backup_original_files()
