@@ -16,10 +16,11 @@ else:
 script_version = "v4.2.0"
 
 gv_name = "GameVault"
-gvu_config_dir = "_GVU/GVU config"
+gvu_config_dir = Path("_GVU/GVU config")
 custom_script_name = "GVU"
 custom_script_filename = "gvu_config"
 custom_script_copy_append = "_copy_DO_NOT_DELETE"
+internals_name = "_GVU"
 
 # ----------------------------
 # Base Paths

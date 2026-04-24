@@ -39,12 +39,12 @@ def get_gamevault_game_ID():
     set_config_values(Config.Default.str(), Config.Default.GameVaultGameID, match.group(1))
 
 def backup_original_files():
-    orig_dir = Path(gvu_config_dir + "/original files")
+    orig_dir = ORIGINAL_FILES_PATH
     # Backup GVU original files
     has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
     if not has_original:
         return
-    gvu_orig_dir = Path(gvu_config_dir + "/gvu original files")
+    gvu_orig_dir = BASE_PATH / gvu_config_dir / "gvu original files"
     # Check if "gvu original files" exist
     if gvu_orig_dir.is_dir():
         return
@@ -56,9 +56,8 @@ def backup_original_files():
 
 def setup_no_gamevault():
     global config
-    # Check if 
-    orig_dir = Path(gvu_config_dir + "/original files")
-    crack_dir = Path(gvu_config_dir + "/cracked files")
+    orig_dir = ORIGINAL_FILES_PATH
+    crack_dir = CRACKED_FILES_PATH
 
     backup_original_files()
 
