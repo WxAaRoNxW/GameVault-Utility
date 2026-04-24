@@ -75,9 +75,10 @@ def setup_no_gamevault():
         if not stripped_found_files & required_files:
             raise FileNotFoundError(lang["no_gamevault.errors.not_found_steam_api"])
     
-    # replace old config in case it was used by an old user
-    shutil.copy2(CONFIG_COPY_PATH, CONFIG_PATH)
-    config = ConfigObj(str(CONFIG_PATH))
+    if not initial:
+        # replace old config in case it was used by an old user
+        shutil.copy2(CONFIG_COPY_PATH, CONFIG_PATH)
+        config = ConfigObj(str(CONFIG_PATH))
 
     # set config of "no original" to false regardless of value (so version switcher shows up + original was already copied)
     set_config_values(Config.Default.str(), Config.Default.NoOriginal, "False")

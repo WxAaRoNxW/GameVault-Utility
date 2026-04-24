@@ -21,6 +21,7 @@ custom_script_name = "GVU"
 custom_script_filename = "gvu_config"
 custom_script_copy_append = "_copy_DO_NOT_DELETE"
 internals_name = "_GVU"
+initial = False
 
 # ----------------------------
 # Base Paths
@@ -57,6 +58,7 @@ try:
         else:
             raise FileNotFoundError(lang["errors.config_missing_backup"](custom_script_filename=custom_script_filename, custom_script_copy_append=custom_script_copy_append))
     if not CONFIG_PATH.is_file(): # copy if main config is missing
+        initial = True
         shutil.copy2(CONFIG_COPY_PATH, CONFIG_PATH)
 except Exception as e:
     import traceback
