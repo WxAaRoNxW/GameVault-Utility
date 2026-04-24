@@ -15,6 +15,7 @@ from logger import console
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
 from InquirerPy.utils import color_print
+from send_to_friend import send_to_friend
 
 # ----------------------------
 # Functions
@@ -93,7 +94,8 @@ class MenuChoices(Enum):
     Start = 0,
     StartAlways = 1,
     Setup = 2,
-    ChangeVersion = 3
+    ChangeVersion = 3,
+    SendToFriend = 4
 
 def get_setup_choice_str(setup_type: str, setup_done: bool):
     is_error = False
@@ -137,6 +139,7 @@ def setup_choices():
             choices.append(Choice(value=MenuChoices.Setup,     name=get_setup_choice_str(setup_type, setup_done)))
         if has_original:
             choices.append(Choice(value=MenuChoices.ChangeVersion, name=get_change_version_choice_str()))
+        choices.append(Choice(value=MenuChoices.SendToFriend,   name="Send to Friend"))
     else:
         choices.append(Choice(value=MenuChoices.Setup,     name=get_setup_choice_str(setup_type, setup_done)))
 
@@ -209,6 +212,8 @@ def main():
             one_time_setup()
         case MenuChoices.ChangeVersion:
             prompt_change_version()
+        case MenuChoices.SendToFriend:
+            send_to_friend()
         case _:
             sys.exit(0)
 

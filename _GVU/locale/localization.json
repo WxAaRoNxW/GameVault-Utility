@@ -97,6 +97,14 @@
                 "gamevault_game_id": "Unable to retrieve GameVault Game ID. This should not happen did the Game Folder name changed?"
             }
         },
+        "send_to_friend": {
+            "copied_exe": "Copied {exe_name} to _toCompress",
+            "copied_internals": "Copied {_internals} to _toCompress",
+            "deleted_config": "Deleted {config_path}",
+            "created_zip": "Created {zip_name}.zip",
+            "send_guide": "Send this zip file to your friend who has a legitimate copy!\n\nYou can use a file sharing site like https://snap-drop.net (like SHAREit/AirDrop but global), https://limewire.com, or https://pixeldrain.com\nThey must, download and extract it in their legit game's folder. (Highlight then simply right click the url to copy)",
+            "opening_folder": "Opening folder: {folder_path}"
+        },
         "errors": {
             "config_missing_backup": "'{custom_script_filename}{custom_script_copy_append}.ini' is missing, ask GameVault Admin for repair file",
             "original_files_missing": "'original files' folder missing, is this a {custom_script_name} compatible game?",
