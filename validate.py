@@ -58,22 +58,29 @@ def setup_no_gamevault():
     global config
     orig_dir = ORIGINAL_FILES_PATH
     crack_dir = CRACKED_FILES_PATH
+    temp_dir = BASE_PATH / gvu_config_dir / "temp_original_files"
 
-    backup_original_files()
-
-    found_files, found_ref_files = copy_files_from_reference(BASE_PATH, crack_dir, orig_dir)
+    # Copy files to temp location and get results to check if game is clean
+    found_files, found_ref_files = copy_files_from_reference(BASE_PATH, crack_dir, temp_dir)
 
     transformed_found_crack_files = {found_ref_file.relative_to(crack_dir) for found_ref_file in found_ref_files}
 
     # if true, means all files from crack are found in base_path, meaning there's no original files in base path, pre-cracked
     game_is_clean = found_files != transformed_found_crack_files
     if game_is_clean:
+        # Only backup and move if game is clean
+        backup_original_files()
+        shutil.move(str(temp_dir), str(orig_dir))
         # copy/backup original files
         required_files = {"steam_api64.dll", "steam_api.dll"}
         stripped_found_files = {found_file.name for found_file in found_files}
         
         if not stripped_found_files & required_files:
             raise FileNotFoundError(lang["no_gamevault.errors.not_found_steam_api"])
+    else:
+        # Clean up temp directory if game is not clean
+        if temp_dir.exists():
+            shutil.rmtree(temp_dir)
     
     if not initial:
         # replace old config in case it was used by an old user
