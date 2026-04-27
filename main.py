@@ -4,12 +4,12 @@ import sys
 import subprocess
 import webbrowser
 from setup_game import CRACK_TYPES, is_complete, one_time_setup
-from config_loader import BASE_PATH, Config, get_config_value, set_config_values, script_version
+from config_loader import BASE_PATH, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version
 from validate import validate_paths
 from lang import lang
 from util import clear_screen, get_exe_path, sleep
 from version_changer import change_version
-from gamevault_exec_handler import set_executable
+from gamevault_exec_handler import GVExecConfig
 from symlink import move_source_and_link_dir, parse_move_link_input
 from logger import console
 from InquirerPy import inquirer
@@ -23,10 +23,12 @@ from send_to_friend import send_to_friend
 
 # 1. Start game
 def start_game(reset: bool = True):
+    gv_config = GVExecConfig(GAMEVAULT_EXEC_CONFIG)
     console.print(lang["start.starting_game"])
     no_gamevault_mode = get_config_value(Config.Other.str(), Config.Other.NoGameVaultMode, "False").lower() == "true"
     is_original = get_config_value(Config.Default.str(), Config.Default.GameVersion, "Pirated").lower() == "original"
     steam_appid = get_config_value(Config.Default.str(), Config.Default.SteamAppID, "-1")
+    exe_path = Path(get_config_value(Config.Default.str(), Config.Default.Executable))
     if is_original:
         if steam_appid != "-1": # if no steam id
             webbrowser.open(f"steam://run/{steam_appid}")
@@ -36,7 +38,7 @@ def start_game(reset: bool = True):
 
     if not no_gamevault_mode:
         # Update executable of gamevault-exec temporarily
-        set_executable(str(BASE_PATH / get_config_value(Config.Default.str(), Config.Default.Executable)))
+        gv_config.set_executable(str(exe_path.resolve()))
         set_config_values(Config.Default.str(), Config.Default.DontAskAgain, "False")
             
         # GV game's launch exe is set to the actual game's .exe, just open browser then reset
@@ -48,13 +50,10 @@ def start_game(reset: bool = True):
 
         # no need to reset if it was already default
         if reset:
-            set_executable(get_exe_path()) # revert to this python.exe
+            gv_config.set_executable(get_exe_path()) # revert to this python.exe
         sys.exit(0)
     else:
         # run exe
-        exe_path = get_config_value(Config.Default.str(), Config.Default.Executable)
-        exe_path = Path(exe_path)
-
         if exe_path.exists() and exe_path.is_file():
             subprocess.Popen(exe_path)
             sleep(1)
@@ -173,7 +172,8 @@ def reset_default_exec():
         return
 
     # Update executable of gamevault-exec temporarily
-    set_executable(get_exe_path())
+    gv_config = GVExecConfig(GAMEVAULT_EXEC_CONFIG)
+    gv_config.set_executable(get_exe_path())
     set_config_values(Config.Default.str(), Config.Default.DontAskAgain, "False")
 
 # ----------------------------
