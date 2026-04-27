@@ -32,9 +32,15 @@ class GVExecConfig:
         self.data["Executable"] = str(path)
         self.save()
 
+    def set_launch_parameter(self, param: str):
+        self.data["LaunchParameter"] = param.strip()
+        self.save()
+
     def get_executable(self) -> Path | None:
         val = self.data.get("Executable")
         return Path(val) if val else None
 
+    def get_launch_parameter(self) -> str | None:
+        return self.data.get("LaunchParameter")
 #def set_gamevault_id(game_dir_name: str):
 #   

@@ -73,6 +73,7 @@ class Config:
     @dataclass(frozen=True)
     class Default:
         Executable: str = "Executable"
+        LaunchParameter: str = "LaunchParameter"
         GameVersion: str = "GameVersion"
         GameVaultGameID = "GameVaultGameID" # To launch the game through gamevault url
         SteamAppID: str = "SteamAppID"

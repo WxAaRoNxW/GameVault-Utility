@@ -1,5 +1,6 @@
 from enum import Enum
 from pathlib import Path
+import shlex
 import sys
 import subprocess
 import webbrowser
@@ -29,6 +30,7 @@ def start_game(reset: bool = True):
     is_original = get_config_value(Config.Default.str(), Config.Default.GameVersion, "Pirated").lower() == "original"
     steam_appid = get_config_value(Config.Default.str(), Config.Default.SteamAppID, "-1")
     exe_path = Path(get_config_value(Config.Default.str(), Config.Default.Executable))
+    launch_parameter = get_config_value(Config.Default.str(), Config.Default.LaunchParameter, "")
     if is_original:
         if steam_appid != "-1": # if no steam id
             webbrowser.open(f"steam://run/{steam_appid}")
@@ -39,6 +41,10 @@ def start_game(reset: bool = True):
     if not no_gamevault_mode:
         # Update executable of gamevault-exec temporarily
         gv_config.set_executable(str(exe_path.resolve()))
+        curr_param = gv_config.get_launch_parameter()
+        no_existing_param = not curr_param or curr_param == ""
+        if no_existing_param:
+            gv_config.set_launch_parameter(launch_parameter)
         set_config_values(Config.Default.str(), Config.Default.DontAskAgain, "False")
             
         # GV game's launch exe is set to the actual game's .exe, just open browser then reset
@@ -51,11 +57,14 @@ def start_game(reset: bool = True):
         # no need to reset if it was already default
         if reset:
             gv_config.set_executable(get_exe_path()) # revert to this python.exe
+            gv_config.set_launch_parameter("")
         sys.exit(0)
     else:
-        # run exe
+        # run exe with param
         if exe_path.exists() and exe_path.is_file():
-            subprocess.Popen(exe_path)
+            split_params = shlex.split(launch_parameter, posix=False)
+            exec_command = [str(exe_path)] + split_params
+            subprocess.Popen(exec_command, cwd=exe_path.parent)
             sleep(1)
             sys.exit(0)
         else:
@@ -174,6 +183,7 @@ def reset_default_exec():
     # Update executable of gamevault-exec temporarily
     gv_config = GVExecConfig(GAMEVAULT_EXEC_CONFIG)
     gv_config.set_executable(get_exe_path())
+    gv_config.set_launch_parameter("")
     set_config_values(Config.Default.str(), Config.Default.DontAskAgain, "False")
 
 # ----------------------------
