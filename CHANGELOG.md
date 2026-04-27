@@ -1,6 +1,16 @@
 # Changelog
 <details open>
 <summary><b>
+v5.1.0
+</b></summary>
+
+- Added
+    - Add LaunchParameter config option.
+
+</details>
+
+<details>
+<summary><b>
 v5.0.0
 </b></summary>
 
