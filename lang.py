@@ -1,4 +1,5 @@
 import json
+from config import internals_name
 
 class Lang:
     def __init__(self, path, lang):
@@ -24,4 +25,4 @@ class Lang:
             return lambda **kwargs: value.format(**kwargs)
         return value
 
-lang = Lang("_GVU/locale/localization.json", "en")
+lang = Lang(f"{internals_name}/locale/localization.json", "en")
