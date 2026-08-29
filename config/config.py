@@ -22,6 +22,7 @@ initial = False
 # ----------------------------
 # Base Paths
 # ----------------------------
+LOCALE_PATH                 = f"{internals_name}/locale/localization.json" if not DEBUG else "locale/localization.json"
 BASE_PATH                   = Path.cwd()
 GAMEVAULT_GAME_PATH         = BASE_PATH.parent           # ex. (1)Random Game
 GAMEVAULT_ROOT_PATH         = BASE_PATH.parent.parent.parent # ex. GameVault -> Installations | Downloads

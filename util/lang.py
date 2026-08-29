@@ -1,5 +1,5 @@
 import json
-from config.config import internals_name
+from config.config import LOCALE_PATH
 
 class Lang:
     def __init__(self, path, lang):
@@ -25,4 +25,4 @@ class Lang:
             return lambda **kwargs: value.format(**kwargs)
         return value
 
-lang = Lang(f"{internals_name}/locale/localization.json", "en")
+lang = Lang(LOCALE_PATH, "en")
