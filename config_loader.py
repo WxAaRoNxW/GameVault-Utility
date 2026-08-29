@@ -16,11 +16,12 @@ else:
 script_version = "v5.1.0"
 
 gv_account_name = "GameVault"
-gvu_config_dir = Path("_GVU/GVU config")
 custom_script_name = "GVU"
+
+internals_name = "_GVU"
+gvu_config_dir = Path("_GVU/GVU config")
 custom_script_filename = "gvu_config"
 custom_script_copy_append = "_copy_DO_NOT_DELETE"
-internals_name = "_GVU"
 initial = False
 
 # ----------------------------
