@@ -5,10 +5,10 @@ import sys
 import subprocess
 import webbrowser
 from setup_game import CRACK_TYPES, is_complete, one_time_setup
-from config_loader import BASE_PATH, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version
+from config_loader import BASE_PATH, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version, header_config
 from validate import validate_paths
 from lang import lang
-from util import clear_screen, get_exe_path, sleep
+from util import clear_screen, get_exe_path, render_text, sleep
 from version_changer import change_version
 from gamevault_exec_handler import GVExecConfig
 from symlink import move_source_and_link_dir, parse_move_link_input
@@ -191,19 +191,7 @@ def reset_default_exec():
 # ----------------------------
 def main():
     no_gamevault_mode = get_config_value(Config.Other.str(), Config.Other.NoGameVaultMode, "True").lower() == "true"
-    color_print(formatted_text=[
-                    ("class:gg", "Game"),
-                    ("", "Manager" if no_gamevault_mode else "Vault"),
-                    ("class:yy", " Utility"),
-                    ("", " - "),
-                    ("class:vv", script_version)
-                ],
-                style={
-                    "": "bold underline",
-                    "yy": "cyan",
-                    "gg": "#4f46af",
-                    "vv": "yellow"
-                })
+    render_text(header_config, {"gamemode": " Manager" if no_gamevault_mode else "Vault"})
 
     choices = setup_choices()
     choice: MenuChoices | None = inquirer.select(

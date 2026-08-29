@@ -4,6 +4,8 @@ import shutil
 import sys
 import time
 from typing import Tuple
+
+from InquirerPy.utils import color_print
 from logger import console
 from lang import lang
 
@@ -113,3 +115,24 @@ def find_files_from_reference(search_path: Path, reference_dir: Path, destinatio
 
     # 4. find files
     return found_files, found_ref_files
+
+def render_text(config, variables=None):
+    variables = variables or {}
+
+    formatted_text = []
+
+    for item in config["title"]:
+        text = item["text"]
+
+        for key, value in variables.items():
+            text = text.replace(f"{{{{{key}}}}}", str(value))
+
+        style = item.get("style", "")
+        class_name = f"class:{style}" if style else ""
+
+        formatted_text.append((class_name, text))
+
+    color_print(
+        formatted_text=formatted_text,
+        style=config["styles"],
+    )

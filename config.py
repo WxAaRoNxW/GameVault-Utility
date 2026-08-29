@@ -45,3 +45,19 @@ GAMEVAULT_EXEC_CONFIG       = GAMEVAULT_GAME_PATH / "gamevault-exec"            
 ORIGINAL_FILES_PATH         = BASE_PATH / gvu_config_dir / "original files"
 CRACKED_FILES_PATH          = BASE_PATH / gvu_config_dir / "cracked files"
 GLOBAL_CONFIG               = ROAMING / custom_script_name / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
+
+header_config = {
+    "title": [
+        {"text": "Game", "style": "game"},
+        {"text": "{{gamemode}}", "style": "mode"},
+        {"text": " Utility", "style": "util"},
+        {"text": " - "},
+        {"text": f"{script_version}", "style": "version"},
+    ],
+    "styles": {
+        "": "bold underline",
+        "game": "#4f46af",
+        "util": "cyan",
+        "version": "yellow",
+    }
+}
