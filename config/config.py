@@ -14,7 +14,7 @@ gv_account_name = "GameVault"
 custom_script_name = "GVU"
 
 internals_name = f"_{custom_script_name}"                                   # _GVU
-gvu_config_dir = Path(f"{internals_name}/{custom_script_name} config")      # _GVU/GVU config
+gvu_config_dir = Path(f"{internals_name}/{custom_script_name} config") if not DEBUG else Path(f"{custom_script_name} config")       # _GVU/GVU config
 custom_script_filename = f"{custom_script_name.lower()}_config"             # GVU -> gvu
 custom_script_copy_append = "_copy_DO_NOT_DELETE"
 initial = False
