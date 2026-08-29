@@ -15,7 +15,7 @@ else:
 
 script_version = "v5.1.0"
 
-gv_name = "GameVault"
+gv_account_name = "GameVault"
 gvu_config_dir = Path("_GVU/GVU config")
 custom_script_name = "GVU"
 custom_script_filename = "gvu_config"

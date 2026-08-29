@@ -5,7 +5,7 @@ from typing import Literal, TypeAlias
 import webbrowser
 
 from configobj import ConfigObj
-from config_loader import ROAMING, Config, get_config_value, parse_tuple_list_string, set_config_values, gv_name
+from config_loader import ROAMING, Config, get_config_value, parse_tuple_list_string, set_config_values, gv_account_name
 from lang import lang
 from global_config import GlobalConfig, get_global_config_value, set_global_config_value
 from prompt_key_actions import get_l_instruction_suffix, get_keybindings
@@ -117,7 +117,7 @@ def goldberg_setup():
     settings_folder = ROAMING / "GSE Saves" / "settings"
     settings_folder.mkdir(parents=True, exist_ok=True)
     settings_path = settings_folder / file_name
-    account_name: str = gv_name
+    account_name: str = gv_account_name
     id_content: str = "76561197960265728"
     exists = False
     # Check if files exists and Show existing data
@@ -126,7 +126,7 @@ def goldberg_setup():
         console.print(lang["setup.goldberg.existing_config"])
         exists = True
         gse_config = ConfigObj(str(settings_path))
-        account_name = gse_config["user::general"].get("account_name", gv_name)
+        account_name = gse_config["user::general"].get("account_name", gv_account_name)
         id_content = gse_config["user::general"].get("account_steamid", id_content)
         console.print(lang["setup.goldberg.current_username"](account_name=account_name))
         console.print(lang["setup.goldberg.current_steam_id"](id_content=id_content))
@@ -231,7 +231,7 @@ def goldberg_old_setup():
     settings_folder.mkdir(parents=True, exist_ok=True)
     settings_name_path = settings_folder / name_file
     settings_id_path = settings_folder / steam_id_file
-    account_name: str = gv_name
+    account_name: str = gv_account_name
     id_content: str = "76561197960265728"
     exists = False
     # Check if files exists and Show existing data
