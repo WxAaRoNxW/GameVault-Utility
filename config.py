@@ -13,9 +13,9 @@ script_version = "v5.1.0"
 gv_account_name = "GameVault"
 custom_script_name = "GVU"
 
-internals_name = "_GVU"
-gvu_config_dir = Path("_GVU/GVU config")
-custom_script_filename = "gvu_config"
+internals_name = f"_{custom_script_name}"                                   # _GVU
+gvu_config_dir = Path(f"{internals_name}/{custom_script_name} config")      # _GVU/GVU config
+custom_script_filename = f"{custom_script_name.lower()}_config"             # GVU -> gvu
 custom_script_copy_append = "_copy_DO_NOT_DELETE"
 initial = False
 
