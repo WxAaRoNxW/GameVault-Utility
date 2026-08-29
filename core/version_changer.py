@@ -1,10 +1,10 @@
 from pathlib import Path
 import shutil
 from typing import Literal
-from config_loader import BASE_PATH, ORIGINAL_FILES_PATH, CRACKED_FILES_PATH, Config, set_config_values
-from lang import lang
-from util import pause
-from logger import console
+from config.config_loader import BASE_PATH, ORIGINAL_FILES_PATH, CRACKED_FILES_PATH, Config, set_config_values
+from util.lang import lang
+from util.util import pause
+from util.logger import console
 
 def change_version(version: Literal["Original", "Pirated"]):
     base_path = Path(BASE_PATH)

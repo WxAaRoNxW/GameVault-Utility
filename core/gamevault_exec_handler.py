@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from config_loader import GAMEVAULT_EXEC_CONFIG
+from config.config_loader import GAMEVAULT_EXEC_CONFIG
 
 class GVExecConfig:
     def __init__(self, config_path: Path):

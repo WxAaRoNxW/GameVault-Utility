@@ -6,8 +6,8 @@ import time
 from typing import Tuple
 
 from InquirerPy.utils import color_print
-from logger import console
-from lang import lang
+from util.logger import console
+from util.lang import lang
 
 def get_exe_path() -> Path:
     return Path(sys.executable).resolve()

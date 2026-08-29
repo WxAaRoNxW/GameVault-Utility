@@ -3,10 +3,10 @@ import shutil
 import sys
 from configobj import ConfigObj
 
-from config import *
-from util import pause
-from logger import console
-from lang import lang
+from config.config import *
+from util.util import pause
+from util.logger import console
+from util.lang import lang
 
 try:
     if not CONFIG_COPY_PATH.is_file():

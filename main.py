@@ -4,19 +4,19 @@ import shlex
 import sys
 import subprocess
 import webbrowser
-from setup_game import CRACK_TYPES, is_complete, one_time_setup
-from config_loader import BASE_PATH, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version, header_config
-from validate import validate_paths
-from lang import lang
-from util import clear_screen, get_exe_path, render_text, sleep
-from version_changer import change_version
-from gamevault_exec_handler import GVExecConfig
-from symlink import move_source_and_link_dir, parse_move_link_input
-from logger import console
+from core.setup_game import CRACK_TYPES, is_complete, one_time_setup
+from config.config_loader import BASE_PATH, GAMEVAULT_EXEC_CONFIG, Config, get_config_value, set_config_values, script_version, header_config
+from core.validate import validate_paths
+from util.lang import lang
+from util.util import clear_screen, get_exe_path, render_text, sleep
+from core.version_changer import change_version
+from core.gamevault_exec_handler import GVExecConfig
+from config.symlink import move_source_and_link_dir, parse_move_link_input
+from util.logger import console
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
 from InquirerPy.utils import color_print
-from send_to_friend import send_to_friend
+from core.send_to_friend import send_to_friend
 
 # ----------------------------
 # Functions

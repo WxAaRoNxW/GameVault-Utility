@@ -5,13 +5,13 @@ from typing import Literal, TypeAlias
 import webbrowser
 
 from configobj import ConfigObj
-from config_loader import ROAMING, Config, get_config_value, parse_tuple_list_string, set_config_values, gv_account_name
-from lang import lang
-from global_config import GlobalConfig, get_global_config_value, set_global_config_value
-from prompt_key_actions import get_l_instruction_suffix, get_keybindings
-from prompt_validator import validate_prompt, validate_steam_id
-from util import clear_screen, pause, sleep
-from logger import console
+from config.config_loader import ROAMING, Config, get_config_value, parse_tuple_list_string, set_config_values, gv_account_name
+from util.lang import lang
+from config.global_config import GlobalConfig, get_global_config_value, set_global_config_value
+from core.prompt_key_actions import get_l_instruction_suffix, get_keybindings
+from core.prompt_validator import validate_prompt, validate_steam_id
+from util.util import clear_screen, pause, sleep
+from util.logger import console
 from InquirerPy import inquirer
 
 class CRACK_TYPES(Enum):

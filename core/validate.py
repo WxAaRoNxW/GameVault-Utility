@@ -1,5 +1,5 @@
-from config_loader import *
-from util import clear_screen, copy_files_from_reference
+from config.config_loader import *
+from util.util import clear_screen, copy_files_from_reference
 import re
 from InquirerPy import inquirer
 

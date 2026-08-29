@@ -1,5 +1,5 @@
 import json
-from config import internals_name
+from config.config import internals_name
 
 class Lang:
     def __init__(self, path, lang):

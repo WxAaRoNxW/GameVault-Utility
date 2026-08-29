@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from configobj import ConfigObj
 
-from config_loader import GLOBAL_CONFIG
+from config.config_loader import GLOBAL_CONFIG
 
 # Config Schematic
 @dataclass(frozen=True)

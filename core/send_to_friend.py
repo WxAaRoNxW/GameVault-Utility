@@ -3,10 +3,10 @@ import shutil
 import subprocess
 from pathlib import Path
 import sys
-from config_loader import BASE_PATH, CONFIG_PATH, script_version, internals_name
-from logger import console
-from lang import lang
-from util import pause, sleep
+from config.config_loader import BASE_PATH, CONFIG_PATH, script_version, internals_name
+from util.logger import console
+from util.lang import lang
+from util.util import pause, sleep
 
 def send_to_friend():
     # Create _toCompress directory

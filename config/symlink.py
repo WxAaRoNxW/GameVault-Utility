@@ -4,8 +4,8 @@ import os
 from pathlib import Path
 import shutil
 from typing import Literal, TypeAlias
-from config_loader import DEBUG, GAME_NAME, PERSISTENT_DATA_GAME_PATH, parse_tuple_list_string
-from lang import lang
+from config.config_loader import DEBUG, GAME_NAME, PERSISTENT_DATA_GAME_PATH, parse_tuple_list_string
+from util.lang import lang
 
 setup_keys_literal: TypeAlias = Literal['Target', 'Destination', 'Type']
 setup_dict_literal: TypeAlias = dict[setup_keys_literal, str]
