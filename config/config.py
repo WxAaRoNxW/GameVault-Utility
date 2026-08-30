@@ -10,23 +10,23 @@ else:
 
 script_version = "v5.1.0"
 
-gv_account_name = "GameVault"
-custom_script_name = "GVU"
+gv_account_name = "GameVault" # Default account name to use for specific "versions" of a game. users can change the default field
+APP_NAME = "GVU"
 
-internals_name = f"_{custom_script_name}"                                   # _GVU
-gvu_config_dir = Path(f"{internals_name}/{custom_script_name} config") if not DEBUG else Path(f"{custom_script_name} config")       # _GVU/GVU config
-custom_script_filename = f"{custom_script_name.lower()}_config"             # GVU -> gvu
-custom_script_copy_append = "_copy_DO_NOT_DELETE"
+INTERNAL_NAME = f"_{APP_NAME}"                                                                                  # _GVU
+CONFIG_DIR_PATH = Path(f"{INTERNAL_NAME}/{APP_NAME} config") if not DEBUG else Path(f"{APP_NAME} config")       # _GVU/GVU config
+CONFIG_FILENAME = f"{APP_NAME.lower()}_config"                                                                  # GVU -> gvu
+CONFIG_COPY_SUFFIX = "_copy_DO_NOT_DELETE"
 initial = False
 
 # ----------------------------
 # Base Paths
 # ----------------------------
-LOCALE_PATH                 = f"{internals_name}/locale/localization.json" if not DEBUG else "locale/localization.json"
+LOCALE_PATH                 = f"{INTERNAL_NAME}/locale/localization.json" if not DEBUG else "locale/localization.json"
 BASE_PATH                   = Path.cwd()
-GAMEVAULT_GAME_PATH         = BASE_PATH.parent           # ex. (1)Random Game
-GAMEVAULT_ROOT_PATH         = BASE_PATH.parent.parent.parent # ex. GameVault -> Installations | Downloads
-PERSISTENT_DATA_PATH        = GAMEVAULT_ROOT_PATH / "Persistent Data"
+GAMEVAULT_GAME_PATH         = BASE_PATH.parent                          # ex. (1)Random Game
+GAMEVAULT_ROOT_PATH         = BASE_PATH.parent.parent.parent            # ex. GameVault -> Installations | Downloads
+PERSISTENT_DATA_PATH        = GAMEVAULT_ROOT_PATH / "Persistent Data"   # Persistent Data directory will be made beside Installations, with sub folder containing GAMEVAULT_GAME_PATH
 
 GAME_NAME = GAMEVAULT_GAME_PATH.name
 PERSISTENT_DATA_GAME_PATH   = PERSISTENT_DATA_PATH / GAME_NAME
@@ -40,12 +40,12 @@ if os.name == "nt":
 else:
     ROAMING = Path.home() / ".config"
     
-CONFIG_PATH                 = BASE_PATH / gvu_config_dir / f"{custom_script_filename}.ini"                    # external config
-CONFIG_COPY_PATH            = BASE_PATH / gvu_config_dir / f"{custom_script_filename}{custom_script_copy_append}.ini" # external config copy
+CONFIG_PATH                 = BASE_PATH / CONFIG_DIR_PATH / f"{CONFIG_FILENAME}.ini"                    # external config
+CONFIG_COPY_PATH            = BASE_PATH / CONFIG_DIR_PATH / f"{CONFIG_FILENAME}{CONFIG_COPY_SUFFIX}.ini" # external config copy
 GAMEVAULT_EXEC_CONFIG       = GAMEVAULT_GAME_PATH / "gamevault-exec"               # parent path's config file
-ORIGINAL_FILES_PATH         = BASE_PATH / gvu_config_dir / "original files"
-CRACKED_FILES_PATH          = BASE_PATH / gvu_config_dir / "cracked files"
-GLOBAL_CONFIG               = ROAMING / custom_script_name / f"{custom_script_filename}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
+ORIGINAL_FILES_PATH         = BASE_PATH / CONFIG_DIR_PATH / "original files"
+CRACKED_FILES_PATH          = BASE_PATH / CONFIG_DIR_PATH / "cracked files"
+GLOBAL_CONFIG               = ROAMING / APP_NAME / f"{CONFIG_FILENAME}_global.ini"      # contains data if OnlineFix or Goldberg has been setup, since they are one time global setups
 
 header_config = {
     "title": [

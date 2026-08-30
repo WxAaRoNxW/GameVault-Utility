@@ -1,22 +1,22 @@
 from pathlib import Path
 import subprocess
 
-from config.config import custom_script_name, internals_name, LOCALE_PATH, ORIGINAL_FILES_PATH, CRACKED_FILES_PATH, gvu_config_dir, CONFIG_COPY_PATH
+from config.config import APP_NAME, INTERNAL_NAME, LOCALE_PATH, ORIGINAL_FILES_PATH, CRACKED_FILES_PATH, CONFIG_DIR_PATH, CONFIG_COPY_PATH
 
 subprocess.run([
     "pyinstaller",
     "-D",
-    "-n", custom_script_name,
-    "--contents-directory", internals_name,
+    "-n", APP_NAME,
+    "--contents-directory", INTERNAL_NAME,
     "--uac-admin",
     "--add-data", f"{LOCALE_PATH}:locale",
-    "--add-data", f"{CONFIG_COPY_PATH}:{custom_script_name} config",
+    "--add-data", f"{CONFIG_COPY_PATH}:{APP_NAME} config",
     "main.py",
 ], check=True)
 
 
 # Place empty dirs after PyInstaller finishes
-output_dir = Path("dist") / custom_script_name / internals_name / gvu_config_dir
+output_dir = Path("dist") / APP_NAME / INTERNAL_NAME / CONFIG_DIR_PATH
 
 for directory in [
     output_dir / ORIGINAL_FILES_PATH.name,

@@ -13,7 +13,7 @@ def validate_paths():
                             default=True).execute()
         clear_screen()
         if not proceed:
-            raise FileNotFoundError(lang["validate.errors.gamevault_exec_missing"](custom_script_name=custom_script_name))
+            raise FileNotFoundError(lang["validate.errors.gamevault_exec_missing"](custom_script_name=APP_NAME))
         setup_no_gamevault()
     
     no_gamevault_mode = get_config_value(Config.Other.str(), Config.Other.NoGameVaultMode, "False").lower() == "true"
@@ -28,8 +28,8 @@ def validate_paths():
         directory.mkdir(parents=True, exist_ok=True)
         
     has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
-    if has_original and not any(ORIGINAL_FILES_PATH.iterdir()): raise FileNotFoundError(lang["errors.original_files_missing"](custom_script_name=custom_script_name))
-    if has_original and not any(CRACKED_FILES_PATH.iterdir()): raise FileNotFoundError(lang["errors.crack_files_missing"](custom_script_name=custom_script_name))
+    if has_original and not any(ORIGINAL_FILES_PATH.iterdir()): raise FileNotFoundError(lang["errors.original_files_missing"](custom_script_name=APP_NAME))
+    if has_original and not any(CRACKED_FILES_PATH.iterdir()): raise FileNotFoundError(lang["errors.crack_files_missing"](custom_script_name=APP_NAME))
 
 def get_gamevault_game_ID():
     been_set = get_config_value(Config.Default.str(), Config.Default.GameVaultGameID, "-1") != "-1"
@@ -50,7 +50,7 @@ def backup_original_files():
     has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
     if not has_original:
         return
-    gvu_orig_dir = BASE_PATH / gvu_config_dir / "gvu original files"
+    gvu_orig_dir = BASE_PATH / CONFIG_DIR_PATH / "gvu original files"
     # Check if "gvu original files" exist
     if gvu_orig_dir.is_dir():
         return
@@ -64,7 +64,7 @@ def setup_no_gamevault():
     global config
     orig_dir = ORIGINAL_FILES_PATH
     crack_dir = CRACKED_FILES_PATH
-    temp_dir = BASE_PATH / gvu_config_dir / "temp_original_files"
+    temp_dir = BASE_PATH / CONFIG_DIR_PATH / "temp_original_files"
 
     # Copy files to temp location and get results to check if game is clean
     found_files, found_ref_files = copy_files_from_reference(BASE_PATH, crack_dir, temp_dir)

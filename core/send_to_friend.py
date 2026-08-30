@@ -3,7 +3,7 @@ import shutil
 import subprocess
 from pathlib import Path
 import sys
-from config.config_loader import BASE_PATH, CONFIG_PATH, script_version, internals_name
+from config.config_loader import BASE_PATH, CONFIG_PATH, script_version, INTERNAL_NAME
 from util.logger import console
 from util.lang import lang
 from util.util import pause, sleep
@@ -15,17 +15,17 @@ def send_to_friend():
     
     # Copy this.exe and _GVU to _toCompress
     script_path = Path(sys.executable)
-    gvu_path = BASE_PATH / internals_name
+    gvu_path = BASE_PATH / INTERNAL_NAME
     
     shutil.copy2(script_path, to_compress_dir / script_path.name)
     console.print(lang["send_to_friend.copied_exe"](exe_name=script_path.name))
     
     if gvu_path.exists():
-        gvu_copy = to_compress_dir / internals_name
+        gvu_copy = to_compress_dir / INTERNAL_NAME
         if gvu_copy.exists():
             shutil.rmtree(gvu_copy)
         shutil.copytree(gvu_path, gvu_copy)
-        console.print(lang["send_to_friend.copied_internals"](_internals=internals_name))
+        console.print(lang["send_to_friend.copied_internals"](_internals=INTERNAL_NAME))
     else:
         raise FileNotFoundError(gvu_path)
     

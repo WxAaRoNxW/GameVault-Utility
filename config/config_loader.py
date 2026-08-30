@@ -11,10 +11,10 @@ from util.lang import lang
 try:
     if not CONFIG_COPY_PATH.is_file():
         if CONFIG_PATH.is_file(): 
-            console.print(lang["messages.config_missing"](custom_script_filename=custom_script_filename, custom_script_copy_append=custom_script_copy_append))
+            console.print(lang["messages.config_missing"](custom_script_filename=CONFIG_FILENAME, custom_script_copy_append=CONFIG_COPY_SUFFIX))
             pause(clear=True)
         else:
-            raise FileNotFoundError(lang["errors.config_missing_backup"](custom_script_filename=custom_script_filename, custom_script_copy_append=custom_script_copy_append))
+            raise FileNotFoundError(lang["errors.config_missing_backup"](custom_script_filename=CONFIG_FILENAME, custom_script_copy_append=CONFIG_COPY_SUFFIX))
     if not CONFIG_PATH.is_file(): # copy if main config is missing
         initial = True
         shutil.copy2(CONFIG_COPY_PATH, CONFIG_PATH)
