@@ -107,8 +107,8 @@
         },
         "errors": {
             "config_missing_backup": "'{custom_script_filename}{custom_script_copy_append}.ini' is missing, ask GameVault Admin for repair file",
-            "original_files_missing": "'original files' folder missing, is this a {custom_script_name} compatible game?",
-            "crack_files_missing": "'cracked files' folder missing, is this a {custom_script_name} compatible game?",
+            "original_files_missing": "'original files' folder is empty, was the tool configured properly for this game?",
+            "crack_files_missing": "'cracked files' folder is empty, was the tool configured properly for this game?",
             "string_empty": "string empty",
             "tuple_validation_failed": "Each entry must be a/n {required_length}-tuple",
             "prompt_empty": "Prompt empty even though setup exists.",

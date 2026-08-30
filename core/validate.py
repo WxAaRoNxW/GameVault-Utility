@@ -28,8 +28,8 @@ def validate_paths():
         directory.mkdir(parents=True, exist_ok=True)
         
     has_original = get_config_value(Config.Default.str(), Config.Default.NoOriginal, "False").lower() == "false"
-    if has_original and not ORIGINAL_FILES_PATH.is_dir(): raise FileNotFoundError(lang["errors.original_files_missing"](custom_script_name=custom_script_name))
-    if has_original and not CRACKED_FILES_PATH.is_dir(): raise FileNotFoundError(lang["errors.crack_files_missing"](custom_script_name=custom_script_name))
+    if has_original and not any(ORIGINAL_FILES_PATH.iterdir()): raise FileNotFoundError(lang["errors.original_files_missing"](custom_script_name=custom_script_name))
+    if has_original and not any(CRACKED_FILES_PATH.iterdir()): raise FileNotFoundError(lang["errors.crack_files_missing"](custom_script_name=custom_script_name))
 
 def get_gamevault_game_ID():
     been_set = get_config_value(Config.Default.str(), Config.Default.GameVaultGameID, "-1") != "-1"
