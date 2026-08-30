@@ -1,4 +1,6 @@
-build with
+To build, run:
 ```
-pyinstaller -D -n GVU --contents-directory _GVU --uac-admin --add-data _GVU/locale/localization.json:locale main.py
+python build.py
 ```
+
+If you'd like to modify build internals output and default account name for certain types of games, go to config/config.py and modify `custom_script_name` and `gv_account_name` respectively
