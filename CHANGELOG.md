@@ -1,6 +1,41 @@
 # Changelog
 <details open>
 <summary><b>
+v6.0.0
+</b></summary>
+
+Even though it's a major update, it's purely just backend stuff. Had to generalize my commit history so I can set repo to public.
+
+- Changed
+    - Auto create version directories on startup.
+    - Changed error check of version directories from directory exist -> directory empty.
+    - Changed "original files/cracked files missing" message to "empty".
+
+- <details open>
+    <summary><b>
+    Backend
+    </b></summary>
+
+    - Added
+        - Easy custom build to change script name from GVU to something else.
+        - Made Header title to be slightly more configurable.
+        - Add build.py to easily work with pyinstaller (and for retrieving py vars).
+        - Add GVU config directory during build instead of manually adding it every build.
+
+    - Changed
+        - Changed variable names.
+        - Reorder variables.
+        - Separated internal config vars to a different script.
+        - Organize folders.
+        - Moved localization file to a proper folder (gotten rid of _GVU folder in repo).
+        - Organized template outside of internal folders (was also in _GVU).
+
+    </details>
+
+</details>
+
+<details>
+<summary><b>
 v5.1.0
 </b></summary>
 

@@ -16,7 +16,7 @@ else:
 
 initial = False
 
-script_version = "v5.1.0"
+script_version = "v6.0.0"
 
 gv_account_name = "GameVault" # Default account name to use for specific "versions" of a game. users can change the default field
 APP_NAME = "GVU"
